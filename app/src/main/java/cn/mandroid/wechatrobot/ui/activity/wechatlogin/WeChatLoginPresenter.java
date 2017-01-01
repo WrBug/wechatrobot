@@ -9,8 +9,6 @@ import cn.mandroid.wechatrobot.model.common.Injection;
 import cn.mandroid.wechatrobot.model.repository.IWechatAuthenticationCloudSource;
 import cn.mandroid.wechatrobot.model.repository.WechatAuthenticationRepository;
 import cn.mandroid.wechatrobot.ui.activity.common.BasePresenter;
-import cn.mandroid.wechatrobot.ui.activity.home.HomeConstract;
-import cn.mandroid.wechatrobot.utils.MLog;
 
 /**
  * Created by wrBug on 2017/1/1.
@@ -32,11 +30,41 @@ public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View
             public void onSuccess(String uuid) {
                 getQrCode(uuid);
                 getShortUrl(uuid);
+                checkIsScanQrcode(uuid);
             }
 
             @Override
             public void onError() {
                 mView.showLog("错误");
+            }
+        });
+    }
+
+    private void checkIsScanQrcode(final String uuid) {
+        mWechatAuthenticationRepository.checkIsScanQrcode(uuid, new IWechatAuthenticationCloudSource.WaitForLoginCallback() {
+            @Override
+            public void onSuccess(String redirectUrl, String baseUrl) {
+                mView.setActionBarSubTitle("扫码成功，请点击登录");
+                checkIsLogin(uuid);
+            }
+
+            @Override
+            public void onError() {
+                mView.setActionBarSubTitle("登录失败");
+            }
+        });
+    }
+
+    private void checkIsLogin(String uuid) {
+        mWechatAuthenticationRepository.checkIsLogin(uuid, new IWechatAuthenticationCloudSource.WaitForLoginCallback() {
+            @Override
+            public void onSuccess(String redirectUrl, String baseUrl) {
+                mView.setActionBarSubTitle("登录成功，正在获取用户信息");
+            }
+
+            @Override
+            public void onError() {
+                mView.setActionBarSubTitle("登录失败");
             }
         });
     }

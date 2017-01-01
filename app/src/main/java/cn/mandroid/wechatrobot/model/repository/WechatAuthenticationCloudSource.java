@@ -11,6 +11,7 @@ import cn.mandroid.wechatrobot.model.entity.ShortUrlBean;
 import cn.mandroid.wechatrobot.utils.DeviceUtil;
 import cn.mandroid.wechatrobot.utils.FileUtil;
 import cn.mandroid.wechatrobot.utils.MLog;
+import cn.mandroid.wechatrobot.utils.RegexUtil;
 import rx.Subscriber;
 
 /**
@@ -120,5 +121,48 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
                     }
                 });
 
+    }
+
+    @Override
+    public void waitForLogin(String uuid, int tip, final WaitForLoginCallback callback) {
+        String url = "https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login";
+        mGetQequestBuilder.addQuery("tip", "" + tip)
+                .addQuery("uuid", uuid)
+                .addQuery("_", "" + System.currentTimeMillis())
+                .doOtherApiGet(url, new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        if (TextUtils.isEmpty(s)) {
+                            callback.onError();
+                            return;
+                        }
+                        Pattern pattern = Pattern.compile(RegexUtil.WECHAT_AUTHENTICATION_WAIT_FOR_LOGIN);
+                        Matcher match = pattern.matcher(s);
+                        while (match.find()) {
+                            if ("201".equals(match.group(1))) {
+                                callback.onSuccess(null, null);
+                                return;
+                            } else if ("200".equals(match.group(1))) {
+                                pattern = Pattern.compile(RegexUtil.WECHAT_AUTHENTICATION_WAIT_FOR_LOGIN_REDIRECT_UTL);
+                                match = pattern.matcher(s);
+                                while (match.find()) {
+                                    String redirectUrl = match.group(1) + "&fun=new";
+                                    String baseUrl = redirectUrl.substring(0, redirectUrl.lastIndexOf("/"));
+                                    callback.onSuccess(redirectUrl, baseUrl);
+                                }
+                            }
+                        }
+                    }
+                });
     }
 }

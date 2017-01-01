@@ -21,6 +21,10 @@ public interface IWechatAuthenticationCloudSource {
         void onSuccess(String url);
     }
 
+    interface WaitForLoginCallback extends BaseResponseCallback {
+        void onSuccess(String redirectUrl, String baseUrl);
+    }
+
     /**
      * 获取uuid
      *
@@ -43,4 +47,6 @@ public interface IWechatAuthenticationCloudSource {
      * @param callback
      */
     void getShortUrl(String uuid, GetShortUrlCallback callback);
+
+    void waitForLogin(String uuid, int tip, WaitForLoginCallback callback);
 }

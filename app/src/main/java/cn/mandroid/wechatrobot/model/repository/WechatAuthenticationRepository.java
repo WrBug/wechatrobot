@@ -25,9 +25,19 @@ public class WechatAuthenticationRepository {
     public void getQrcode(String uuid, IWechatAuthenticationCloudSource.GetQrcodeCallback callback) {
         mWechatAuthenticationCloudSource.getQrcode(uuid, callback);
     }
-    public void getShortUrl(String uuid, IWechatAuthenticationCloudSource.GetShortUrlCallback callback){
+
+    public void getShortUrl(String uuid, IWechatAuthenticationCloudSource.GetShortUrlCallback callback) {
         mWechatAuthenticationCloudSource.getShortUrl(uuid, callback);
     }
+
+    public void checkIsScanQrcode(String uuid, IWechatAuthenticationCloudSource.WaitForLoginCallback callback) {
+        mWechatAuthenticationCloudSource.waitForLogin(uuid, 1, callback);
+    }
+
+    public void checkIsLogin(String uuid, IWechatAuthenticationCloudSource.WaitForLoginCallback callback) {
+        mWechatAuthenticationCloudSource.waitForLogin(uuid, 0, callback);
+    }
+
     private String getXmlData(String xml, String key) {
         String header = "<" + key + ">";
         String footer = "</" + key + ">";
