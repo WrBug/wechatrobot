@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import java.io.File;
 
 import cn.mandroid.wechatrobot.model.common.Injection;
+import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
 import cn.mandroid.wechatrobot.model.repository.IWechatAuthenticationCloudSource;
 import cn.mandroid.wechatrobot.model.repository.WechatAuthenticationRepository;
 import cn.mandroid.wechatrobot.ui.activity.common.BasePresenter;
@@ -16,10 +17,12 @@ import cn.mandroid.wechatrobot.ui.activity.common.BasePresenter;
 
 public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View> implements WechatLoginContract.Presenter {
     WechatAuthenticationRepository mWechatAuthenticationRepository;
+    WechatAuthenticationBean mWechatAuthenticationBean;
 
     public WeChatLoginPresenter(WechatLoginContract.View view) {
         super(view);
         mWechatAuthenticationRepository = Injection.getWechatAuthenticationRepository();
+        mWechatAuthenticationBean = new WechatAuthenticationBean();
     }
 
     @Override
@@ -45,7 +48,7 @@ public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View
             @Override
             public void onSuccess(String redirectUrl, String baseUrl) {
                 mView.setActionBarSubTitle("扫码成功，请点击登录");
-                checkIsLogin(uuid);
+                checkIsClickLoginButton(uuid);
             }
 
             @Override
@@ -55,10 +58,32 @@ public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View
         });
     }
 
-    private void checkIsLogin(String uuid) {
-        mWechatAuthenticationRepository.checkIsLogin(uuid, new IWechatAuthenticationCloudSource.WaitForLoginCallback() {
+
+    private void checkIsClickLoginButton(String uuid) {
+        mWechatAuthenticationRepository.checkIsClickLoginButton(uuid, new IWechatAuthenticationCloudSource.WaitForLoginCallback() {
             @Override
             public void onSuccess(String redirectUrl, String baseUrl) {
+                mWechatAuthenticationBean.setRedirectUrl(redirectUrl);
+                mWechatAuthenticationBean.setBaseUrl(baseUrl);
+                mView.setActionBarSubTitle("正在登录");
+                wechatLogin(redirectUrl);
+            }
+
+            @Override
+            public void onError() {
+                mView.setActionBarSubTitle("登录失败");
+            }
+        });
+    }
+
+    private void wechatLogin(String redirectUrl) {
+        mWechatAuthenticationRepository.wechatLogin(redirectUrl, new IWechatAuthenticationCloudSource.WechatLoginCallback() {
+            @Override
+            public void onSuccess(String skey, String sid, String uin, String passTicket) {
+                mWechatAuthenticationBean.setSkey(skey);
+                mWechatAuthenticationBean.setSid(sid);
+                mWechatAuthenticationBean.setUin(uin);
+                mWechatAuthenticationBean.setPassTicket(passTicket);
                 mView.setActionBarSubTitle("登录成功，正在获取用户信息");
             }
 

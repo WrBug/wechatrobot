@@ -22,7 +22,7 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
     @Override
     public void getUUID(final GetUUIDCallback callback) {
         String url = "https://login.weixin.qq.com/jslogin";
-        mGetQequestBuilder.addQuery("appid", "wx782c26e4c19acffb")
+        getQequestBuilder().addQuery("appid", "wx782c26e4c19acffb")
                 .addQuery("fun", "new")
                 .addQuery("lang", "zh_CN")
                 .addQuery("_", "" + System.currentTimeMillis())
@@ -56,7 +56,7 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
     @Override
     public void getQrcode(String uuid, final GetQrcodeCallback callback) {
         String url = "https://login.weixin.qq.com/qrcode/" + uuid;
-        mGetQequestBuilder.addQuery("t", "webwx")
+        getQequestBuilder().addQuery("t", "webwx")
                 .addQuery("_", "" + System.currentTimeMillis())
                 .getFile(url, new Subscriber<File>() {
                     @Override
@@ -98,7 +98,7 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
         StringBuilder builder = new StringBuilder("https://login.weixin.qq.com/qrcode/");
         builder.append(uuid).append("?").append("t=webwx").append("&").append("_=").append(System.currentTimeMillis());
         String imgUrl = builder.toString();
-        mGetQequestBuilder.addQuery("url", imgUrl)
+        getQequestBuilder().addQuery("url", imgUrl)
                 .doOtherApiGet(url, new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
@@ -126,7 +126,7 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
     @Override
     public void waitForLogin(String uuid, int tip, final WaitForLoginCallback callback) {
         String url = "https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login";
-        mGetQequestBuilder.addQuery("tip", "" + tip)
+        getQequestBuilder().addQuery("tip", "" + tip)
                 .addQuery("uuid", uuid)
                 .addQuery("_", "" + System.currentTimeMillis())
                 .doOtherApiGet(url, new Subscriber<String>() {
@@ -164,5 +164,45 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
                         }
                     }
                 });
+    }
+
+    /**
+     * 微信登录
+     *
+     * @param redirectUrl
+     * @param callback
+     */
+    @Override
+    public void wechatLogin(String redirectUrl, final WechatLoginCallback callback) {
+        getQequestBuilder().noQuery().doOtherApiGet(redirectUrl, new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+                if (TextUtils.isEmpty(s)) {
+                    callback.onError();
+                    return;
+                }
+                String skey = getLoginData(s, "skey");
+                String sid = getLoginData(s, "wxsid");
+                String uin = getLoginData(s, "wxuin");
+                String passTicket = getLoginData(s, "pass_ticket");
+                callback.onSuccess(skey, sid, uin, passTicket);
+            }
+        });
+    }
+
+    private String getLoginData(String xml, String key) {
+        String header = "<" + key + ">";
+        String footer = "</" + key + ">";
+        return xml.substring(xml.indexOf(header) + header.length(), xml.indexOf(footer));
     }
 }

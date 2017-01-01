@@ -18,29 +18,62 @@ public class WechatAuthenticationRepository {
         return INSTANCE;
     }
 
+    /**
+     * 获取uuid
+     *
+     * @param callback
+     */
     public void getUUID(IWechatAuthenticationCloudSource.GetUUIDCallback callback) {
         mWechatAuthenticationCloudSource.getUUID(callback);
     }
 
+    /**
+     * 获取二维码
+     *
+     * @param uuid
+     * @param callback
+     */
     public void getQrcode(String uuid, IWechatAuthenticationCloudSource.GetQrcodeCallback callback) {
         mWechatAuthenticationCloudSource.getQrcode(uuid, callback);
     }
 
+    /**
+     * 获取二维码短网址
+     *
+     * @param uuid
+     * @param callback
+     */
     public void getShortUrl(String uuid, IWechatAuthenticationCloudSource.GetShortUrlCallback callback) {
         mWechatAuthenticationCloudSource.getShortUrl(uuid, callback);
     }
 
+    /**
+     * 检查是否扫码
+     *
+     * @param uuid
+     * @param callback
+     */
     public void checkIsScanQrcode(String uuid, IWechatAuthenticationCloudSource.WaitForLoginCallback callback) {
         mWechatAuthenticationCloudSource.waitForLogin(uuid, 1, callback);
     }
 
-    public void checkIsLogin(String uuid, IWechatAuthenticationCloudSource.WaitForLoginCallback callback) {
+    /**
+     * 检查是否点击登录按钮
+     *
+     * @param uuid
+     * @param callback
+     */
+    public void checkIsClickLoginButton(String uuid, IWechatAuthenticationCloudSource.WaitForLoginCallback callback) {
         mWechatAuthenticationCloudSource.waitForLogin(uuid, 0, callback);
     }
 
-    private String getXmlData(String xml, String key) {
-        String header = "<" + key + ">";
-        String footer = "</" + key + ">";
-        return xml.substring(xml.indexOf(header) + header.length(), xml.indexOf(footer));
+    /**
+     * 微信登录
+     *
+     * @param redirectUrl
+     * @param callback
+     */
+    public void wechatLogin(String redirectUrl, IWechatAuthenticationCloudSource.WechatLoginCallback callback) {
+        mWechatAuthenticationCloudSource.wechatLogin(redirectUrl, callback);
     }
 }

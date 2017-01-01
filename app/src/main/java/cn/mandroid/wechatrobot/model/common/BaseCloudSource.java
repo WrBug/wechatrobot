@@ -15,12 +15,14 @@ import rx.schedulers.Schedulers;
  */
 
 public class BaseCloudSource {
-    protected GetQequestBuilder mGetQequestBuilder;
     protected Gson mGson;
 
     public BaseCloudSource() {
-        mGetQequestBuilder = new GetQequestBuilder();
         mGson = new GsonBuilder().create();
+    }
+
+    protected GetQequestBuilder getQequestBuilder() {
+        return new GetQequestBuilder();
     }
 
     protected class GetQequestBuilder {
@@ -35,6 +37,9 @@ public class BaseCloudSource {
             return mHttpGetQuery;
         }
 
+        public Query noQuery() {
+            return mHttpGetQuery;
+        }
     }
 
     public static class Query extends HashMap<String, String> {
