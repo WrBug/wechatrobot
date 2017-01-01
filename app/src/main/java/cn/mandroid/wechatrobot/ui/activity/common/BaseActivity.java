@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
     protected Context mContext;
     private static List<BaseActivity> mActivitylist = new ArrayList<>();
     protected T mPersenter;
+    protected ActionBar mActionBar;
 
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +41,12 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
             throw new NullPointerException("presenter is null");
         }
         afterView();
+    }
+
+    @Override
+    public void setSupportActionBar(@Nullable Toolbar toolbar) {
+        super.setSupportActionBar(toolbar);
+        mActionBar = getSupportActionBar();
     }
 
     @LayoutRes
@@ -58,9 +67,34 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
         }
     }
 
+    /**
+     * 设置子标题
+     *
+     * @param subTitle
+     */
+    @Override
+    public void setActionBarSubTitle(String subTitle) {
+        mActionBar.setSubtitle(subTitle);
+    }
+
+    @Override
+    public void setActionBarSubTitle(int resId) {
+        mActionBar.setSubtitle(resId);
+    }
+
     @Override
     public void showLog(String log) {
         MLog.i(log);
+    }
+
+    @Override
+    public void setActionBarTitle(String title) {
+        mActionBar.setTitle(title);
+    }
+
+    @Override
+    public void setActionBarTitle(int resId) {
+        mActionBar.setTitle(resId);
     }
 
     @Override

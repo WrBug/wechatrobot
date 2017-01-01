@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="textCommon">#666666</color>
+    <color name="trans90white">#e5ffffff</color>
+    <color name="trans80white">#ccffffff</color>
+    <color name="trans70white">#b2ffffff</color>
+    <color name="trans50white">#7fffffff</color>
+    <color name="trans30white">#4cffffff</color>
+    <color name="trans10white">#19ffffff</color>
 </resources>

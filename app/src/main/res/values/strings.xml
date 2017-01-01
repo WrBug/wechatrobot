@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">wechatrobot</string>
+    <string name="pc_open_qrcode_notice">电脑访问：%1$s 打开二维码</string>
 </resources>

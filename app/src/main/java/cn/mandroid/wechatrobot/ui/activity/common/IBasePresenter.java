@@ -5,5 +5,5 @@ package cn.mandroid.wechatrobot.ui.activity.common;
  */
 
 public interface IBasePresenter {
-
+    void start();
 }
