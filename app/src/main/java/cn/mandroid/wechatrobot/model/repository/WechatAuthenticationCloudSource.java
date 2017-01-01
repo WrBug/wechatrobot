@@ -3,13 +3,17 @@ package cn.mandroid.wechatrobot.model.repository;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.mandroid.wechatrobot.model.common.BaseCloudSource;
+import cn.mandroid.wechatrobot.model.entity.BaseRequestBean;
 import cn.mandroid.wechatrobot.model.entity.ShortUrlBean;
-import cn.mandroid.wechatrobot.utils.DeviceUtil;
-import cn.mandroid.wechatrobot.utils.FileUtil;
+import cn.mandroid.wechatrobot.model.entity.wechat.WechatSyncKeyBean;
+import cn.mandroid.wechatrobot.model.entity.wechat.WechatUiDataBean;
+import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
+import cn.mandroid.wechatrobot.utils.Constant;
 import cn.mandroid.wechatrobot.utils.MLog;
 import cn.mandroid.wechatrobot.utils.RegexUtil;
 import rx.Subscriber;
@@ -34,13 +38,13 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
 
                     @Override
                     public void onError(Throwable e) {
+                        callback.onError();
                         MLog.e(e.getMessage());
                     }
 
                     @Override
                     public void onNext(String result) {
-                        String regex = "(window.QRLogin.code = )([0-9]*); window.QRLogin.uuid = \"(\\S+?)\"";
-                        Pattern pattern = Pattern.compile(regex);
+                        Pattern pattern = Pattern.compile(RegexUtil.WECHAT_AUTHENTICATION_GET_UUID);
                         Matcher match = pattern.matcher(result);
                         while (match.find()) {
                             if ("200".equals(match.group(2))) {
@@ -72,15 +76,6 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
 
                     @Override
                     public void onNext(File file) {
-//                        String path = DeviceUtil.getSDPath() + "/DCIM/Camera";
-//                        File rootDir = new File(path);
-//                        if (!rootDir.exists() || !rootDir.isDirectory()) {
-//                            rootDir.mkdirs();
-//                        }
-//                        File newFile = new File(rootDir, "qrcode.jpg");
-//                        FileUtil.copyFile(file, newFile.getPath());
-//                        newFile.setReadable(true);
-//                        newFile.setWritable(true);
                         callback.onSuccess(file);
                     }
                 });
@@ -94,12 +89,11 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
      */
     @Override
     public void getShortUrl(String uuid, final GetShortUrlCallback callback) {
-        String url = "http://a.mandroid.cn/api.php";
         StringBuilder builder = new StringBuilder("https://login.weixin.qq.com/qrcode/");
         builder.append(uuid).append("?").append("t=webwx").append("&").append("_=").append(System.currentTimeMillis());
         String imgUrl = builder.toString();
         getQequestBuilder().addQuery("url", imgUrl)
-                .doOtherApiGet(url, new Subscriber<String>() {
+                .doOtherApiGet(Constant.getApiShortUrl(), new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
 
@@ -107,7 +101,6 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
 
                     @Override
                     public void onError(Throwable e) {
-
                     }
 
                     @Override
@@ -137,7 +130,7 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
 
                     @Override
                     public void onError(Throwable e) {
-
+                        callback.onError();
                     }
 
                     @Override
@@ -159,9 +152,13 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
                                     String redirectUrl = match.group(1) + "&fun=new";
                                     String baseUrl = redirectUrl.substring(0, redirectUrl.lastIndexOf("/"));
                                     callback.onSuccess(redirectUrl, baseUrl);
+                                    return;
                                 }
                             }
+                            callback.onError();
+                            return;
                         }
+                        callback.onError();
                     }
                 });
     }
@@ -174,7 +171,7 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
      */
     @Override
     public void wechatLogin(String redirectUrl, final WechatLoginCallback callback) {
-        getQequestBuilder().noQuery().doOtherApiGet(redirectUrl, new Subscriber<String>() {
+        getQequestBuilder().noQuery().doOtherApiGet(redirectUrl, true, new Subscriber<BaseRequestBean>() {
             @Override
             public void onCompleted() {
 
@@ -182,11 +179,12 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
 
             @Override
             public void onError(Throwable e) {
-
+                callback.onError();
             }
 
             @Override
-            public void onNext(String s) {
+            public void onNext(BaseRequestBean baseRequestBean) {
+                String s = baseRequestBean.getResult();
                 if (TextUtils.isEmpty(s)) {
                     callback.onError();
                     return;
@@ -195,9 +193,52 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
                 String sid = getLoginData(s, "wxsid");
                 String uin = getLoginData(s, "wxuin");
                 String passTicket = getLoginData(s, "pass_ticket");
-                callback.onSuccess(skey, sid, uin, passTicket);
+                callback.onSuccess(skey, sid, uin, passTicket, baseRequestBean.getCookie());
             }
         });
+    }
+
+    /**
+     * 获取界面信息
+     *
+     * @param baseUrl
+     * @param passTicket
+     * @param skey
+     * @param params
+     * @param callback
+     */
+    @Override
+    public void getWechatUserInfo(String baseUrl, String passTicket, String skey, Map<String, String> params, final GetWechatUiDataCallback callback) {
+        String url = baseUrl + "/webwxinit?pass_ticket=" + passTicket + "&skey=" + skey + "&r=" + System.currentTimeMillis();
+        postRequestBuilder().addParameter("BaseRequest", params)
+                .doOtherApiPost(url, new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        MLog.e(e.getMessage());
+                        callback.onError();
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        if (TextUtils.isEmpty(s)) {
+                            callback.onError();
+                            return;
+                        }
+                        WechatUiDataBean wechatUiDataBean = mGson.fromJson(s, WechatUiDataBean.class);
+                        if (wechatUiDataBean.getBaseResponse().isSuccess()) {
+                            WechatUserBean userBean = wechatUiDataBean.getUser();
+                            WechatSyncKeyBean wechatSyncKeyBean = wechatUiDataBean.getSyncKey();
+                            callback.onSuccess(userBean, wechatSyncKeyBean);
+                        } else {
+                            callback.onError();
+                        }
+                    }
+                });
     }
 
     private String getLoginData(String xml, String key) {

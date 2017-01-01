@@ -5,11 +5,15 @@ import android.graphics.BitmapFactory;
 
 import java.io.File;
 
+import cn.mandroid.wechatrobot.WechatRobotApp;
 import cn.mandroid.wechatrobot.model.common.Injection;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
+import cn.mandroid.wechatrobot.model.entity.wechat.WechatSyncKeyBean;
+import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 import cn.mandroid.wechatrobot.model.repository.IWechatAuthenticationCloudSource;
 import cn.mandroid.wechatrobot.model.repository.WechatAuthenticationRepository;
 import cn.mandroid.wechatrobot.ui.activity.common.BasePresenter;
+import cn.mandroid.wechatrobot.utils.MLog;
 
 /**
  * Created by wrBug on 2017/1/1.
@@ -53,7 +57,7 @@ public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View
 
             @Override
             public void onError() {
-                mView.setActionBarSubTitle("登录失败");
+                getUUID();
             }
         });
     }
@@ -79,12 +83,15 @@ public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View
     private void wechatLogin(String redirectUrl) {
         mWechatAuthenticationRepository.wechatLogin(redirectUrl, new IWechatAuthenticationCloudSource.WechatLoginCallback() {
             @Override
-            public void onSuccess(String skey, String sid, String uin, String passTicket) {
+            public void onSuccess(String skey, String sid, String uin, String passTicket, String cookie) {
                 mWechatAuthenticationBean.setSkey(skey);
                 mWechatAuthenticationBean.setSid(sid);
                 mWechatAuthenticationBean.setUin(uin);
                 mWechatAuthenticationBean.setPassTicket(passTicket);
+                mWechatAuthenticationBean.setCookie(cookie);
+                mWechatAuthenticationBean.setBaseRequest();
                 mView.setActionBarSubTitle("登录成功，正在获取用户信息");
+                getWechatUiInfo();
             }
 
             @Override
@@ -92,6 +99,25 @@ public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View
                 mView.setActionBarSubTitle("登录失败");
             }
         });
+    }
+
+    private void getWechatUiInfo() {
+        mWechatAuthenticationRepository.getWechatUserInfo(mWechatAuthenticationBean.getBaseUrl(), mWechatAuthenticationBean.getPassTicket(),
+                mWechatAuthenticationBean.getSkey(), mWechatAuthenticationBean.getBaseRequest(), new IWechatAuthenticationCloudSource.GetWechatUiDataCallback() {
+                    @Override
+                    public void onSuccess(WechatUserBean userBean, WechatSyncKeyBean syncKeyBean) {
+                        mWechatAuthenticationBean.setUid(userBean.getUserName());
+                        mWechatAuthenticationRepository.saveWechatAuthInfo(mWechatAuthenticationBean);
+                        mWechatAuthenticationRepository.saveWechatUser(userBean);
+                        MLog.i(syncKeyBean.toJson());
+                        MLog.i(userBean.toJson());
+                    }
+
+                    @Override
+                    public void onError() {
+                        mView.setActionBarSubTitle("获取用户信息失败,请重新登录");
+                    }
+                });
     }
 
     private void getShortUrl(String uuid) {
@@ -115,7 +141,6 @@ public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View
 
             @Override
             public void onError() {
-
             }
         });
     }

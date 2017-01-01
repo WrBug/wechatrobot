@@ -1,14 +1,21 @@
 package cn.mandroid.wechatrobot.model.repository;
 
+import java.util.Map;
+
+import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
+import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
+
 /**
  * Created by wrBug on 2016/12/21.
  */
 public class WechatAuthenticationRepository {
     private static volatile WechatAuthenticationRepository INSTANCE;
     private IWechatAuthenticationCloudSource mWechatAuthenticationCloudSource;
+    private IWechatAuthenticationLocalSource mWechatAuthenticationLocalSource;
 
     private WechatAuthenticationRepository() {
         mWechatAuthenticationCloudSource = new WechatAuthenticationCloudSource();
+        mWechatAuthenticationLocalSource = new WechatAuthenticationLocalSource();
     }
 
     public static WechatAuthenticationRepository getInstant() {
@@ -75,5 +82,36 @@ public class WechatAuthenticationRepository {
      */
     public void wechatLogin(String redirectUrl, IWechatAuthenticationCloudSource.WechatLoginCallback callback) {
         mWechatAuthenticationCloudSource.wechatLogin(redirectUrl, callback);
+    }
+
+    /**
+     * 获取微信用户信息
+     *
+     * @param baseUrl
+     * @param passTicket
+     * @param skey
+     * @param params
+     * @param callback
+     */
+    public void getWechatUserInfo(String baseUrl, String passTicket, String skey, Map<String, String> params, IWechatAuthenticationCloudSource.GetWechatUiDataCallback callback) {
+        mWechatAuthenticationCloudSource.getWechatUserInfo(baseUrl, passTicket, skey, params, callback);
+    }
+
+    /**
+     * 保存微信登录信息
+     *
+     * @param bean
+     */
+    public void saveWechatAuthInfo(WechatAuthenticationBean bean) {
+        mWechatAuthenticationLocalSource.saveWechatAuthInfo(bean);
+    }
+
+    /**
+     * 保存用户信息
+     *
+     * @param wechatUserBean
+     */
+    public void saveWechatUser(WechatUserBean wechatUserBean) {
+        mWechatAuthenticationLocalSource.saveWechatUser(wechatUserBean);
     }
 }

@@ -1,8 +1,11 @@
 package cn.mandroid.wechatrobot.model.repository;
 
 import java.io.File;
+import java.util.Map;
 
 import cn.mandroid.wechatrobot.model.common.BaseResponseCallback;
+import cn.mandroid.wechatrobot.model.entity.wechat.WechatSyncKeyBean;
+import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 
 /**
  * Created by wrBug on 2017/1/1.
@@ -26,7 +29,11 @@ public interface IWechatAuthenticationCloudSource {
     }
 
     interface WechatLoginCallback extends BaseResponseCallback {
-        void onSuccess(String skey, String sid, String uin, String passTicket);
+        void onSuccess(String skey, String sid, String uin, String passTicket, String cookie);
+    }
+
+    interface GetWechatUiDataCallback extends BaseResponseCallback {
+        void onSuccess(WechatUserBean userBean, WechatSyncKeyBean syncKeyBean);
     }
 
     /**
@@ -63,8 +70,21 @@ public interface IWechatAuthenticationCloudSource {
 
     /**
      * 微信登录
+     *
      * @param redirectUrl
      * @param callback
      */
     void wechatLogin(String redirectUrl, WechatLoginCallback callback);
+
+
+    /**
+     * 获取界面信息
+     *
+     * @param baseUrl
+     * @param passTicket
+     * @param skey
+     * @param params
+     * @param callback
+     */
+    void getWechatUserInfo(String baseUrl, String passTicket, String skey, Map<String, String> params, GetWechatUiDataCallback callback);
 }
