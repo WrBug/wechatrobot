@@ -10,6 +10,7 @@ import java.util.List;
 
 import cn.mandroid.wechatrobot.model.entity.BaseBean;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Unique;
 
 /**
  * Created by wrBug on 2017/1/2.
@@ -17,6 +18,7 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class WechatUserBean extends BaseBean {
     @Id
+    @Unique
     private String UserName;
     private long WebWxPluginSwitch;
     private long HeadImgFlag;

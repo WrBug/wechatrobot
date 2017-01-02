@@ -70,7 +70,7 @@ public class WechatUserBeanDao extends AbstractDao<WechatUserBean, String> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"WECHAT_USER_BEAN\" (" + //
-                "\"USER_NAME\" TEXT PRIMARY KEY NOT NULL ," + // 0: UserName
+                "\"USER_NAME\" TEXT PRIMARY KEY NOT NULL UNIQUE ," + // 0: UserName
                 "\"WEB_WX_PLUGIN_SWITCH\" INTEGER NOT NULL ," + // 1: WebWxPluginSwitch
                 "\"HEAD_IMG_FLAG\" INTEGER NOT NULL ," + // 2: HeadImgFlag
                 "\"UIN\" INTEGER NOT NULL ," + // 3: Uin

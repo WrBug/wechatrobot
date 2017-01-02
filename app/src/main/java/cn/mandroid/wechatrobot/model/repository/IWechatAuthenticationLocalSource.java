@@ -1,5 +1,6 @@
 package cn.mandroid.wechatrobot.model.repository;
 
+import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 
@@ -20,4 +21,6 @@ public interface IWechatAuthenticationLocalSource {
      * @param wechatUserBean
      */
     void saveWechatUser(WechatUserBean wechatUserBean);
+
+    void saveLoginWechatUser(LoginWechatUser loginWechatUser);
 }
