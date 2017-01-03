@@ -21,18 +21,18 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
+        LoginWechatUserDao.createTable(db, ifNotExists);
         UserDao.createTable(db, ifNotExists);
         WechatAuthenticationBeanDao.createTable(db, ifNotExists);
         WechatUserBeanDao.createTable(db, ifNotExists);
-        LoginWechatUserDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
+        LoginWechatUserDao.dropTable(db, ifExists);
         UserDao.dropTable(db, ifExists);
         WechatAuthenticationBeanDao.dropTable(db, ifExists);
         WechatUserBeanDao.dropTable(db, ifExists);
-        LoginWechatUserDao.dropTable(db, ifExists);
     }
 
     /**
@@ -51,10 +51,10 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
+        registerDaoClass(LoginWechatUserDao.class);
         registerDaoClass(UserDao.class);
         registerDaoClass(WechatAuthenticationBeanDao.class);
         registerDaoClass(WechatUserBeanDao.class);
-        registerDaoClass(LoginWechatUserDao.class);
     }
 
     public DaoSession newSession() {

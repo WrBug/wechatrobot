@@ -29,6 +29,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile 'com.alipay.euler:andfix:0.5.0@aar'
     compile 'com.android.support:appcompat-v7:25.0.0'
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:recyclerview-v7:25.0.0'
@@ -43,4 +44,58 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.github.hotchemi:permissionsdispatcher:2.3.1'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.1'
+}
+
+android {
+    signingConfigs {
+        releaseConfig
+    }
+    buildTypes {
+        debug {
+            versionNameSuffix "-debug"
+            if (signingConfigs.releaseConfig != null) {
+                signingConfig signingConfigs.releaseConfig
+            }
+        }
+        release {
+//            minifyEnabled true
+//            shrinkResources true
+//            zipAlignEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (signingConfigs.releaseConfig != null) {
+                signingConfig signingConfigs.releaseConfig
+            }
+//            applicationVariants.all { variant ->
+//                variant.outputs.each { output ->
+//                    def outputFile = output.outputFile
+//                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+//                        def fileName = "LittleWaiter_${defaultConfig.versionName}_${variant.productFlavors[0].name}_release.apk"
+//                        output.outputFile = new File(outputFile.parent, fileName)
+//                    }
+//                }
+//            }
+        }
+    }
+}
+
+
+
+def Properties props = new Properties()
+def propFile = file('../signing.properties')
+if (propFile.canRead()) {
+    props.load(new FileInputStream(propFile))
+    if (props != null &&
+            props.containsKey('SIGN_FILE') && props.containsKey('SIGN_PASSWORD') &&
+            props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
+        android.signingConfigs.releaseConfig.storeFile = file(props['SIGN_FILE'])
+        android.signingConfigs.releaseConfig.storePassword = props['SIGN_PASSWORD']
+        android.signingConfigs.releaseConfig.keyAlias = props['KEY_ALIAS']
+        android.signingConfigs.releaseConfig.keyPassword = props['KEY_PASSWORD']
+    } else {
+        println 'release build not found signing properties'
+        android.buildTypes.release.signingConfig = null
+    }
+} else {
+    println 'release build not found signing file'
+    android.buildTypes.release.signingConfig = null
 }

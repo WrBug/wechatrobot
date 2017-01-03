@@ -37,9 +37,10 @@ public class WechatLoginActivity extends BaseActivity<WechatLoginContract.Presen
     @Override
     protected void afterView() {
         setSupportActionBar(mToolBar);
-        setActionBarTitle("微信认证");
+        setActionBarTitle("微信认证11");
         setViewPager();
         mPersenter.getUUID();
+        showToast("卧槽");
     }
 
     private void setViewPager() {

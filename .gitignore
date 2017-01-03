@@ -8,3 +8,7 @@
 /captures
 .externalNativeBuild
 .idea/
+app/apkpatch/opt/hot.apatch
+app/apkpatch/opt/
+app/apkpatch/new.apk
+app/apkpatch/old.apk

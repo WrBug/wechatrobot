@@ -1,0 +1,1 @@
+apkpatch -k signkey.jks -p wt1993 -a wangtao -e wt1993 -t old.apk -f new.apk -o opt

@@ -1,6 +1,7 @@
 package cn.mandroid.wechatrobot.model.repository;
 
 import cn.mandroid.wechatrobot.model.common.BaseLocalSource;
+import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 
@@ -27,5 +28,10 @@ public class WechatAuthenticationLocalSource extends BaseLocalSource implements 
     @Override
     public void saveWechatUser(WechatUserBean wechatUserBean) {
         mDaoSession.getWechatUserBeanDao().insertOrReplace(wechatUserBean);
+    }
+
+    @Override
+    public void saveLoginWechatUser(LoginWechatUser loginWechatUser) {
+
     }
 }

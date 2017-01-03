@@ -19,3 +19,22 @@
 public static java.lang.String TABLENAME;
 }
 -keep class **$Properties
+
+# If you do not use SQLCipher:
+-dontwarn org.greenrobot.greendao.database.**
+# If you do not use Rx:
+-dontwarn rx.**
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+-dontwarn com.squareup.okhttp.**
+-keep class com.squareup.okhttp.** {*;}
+-dontwarn okio.Okio.**
+-keep class okio.Okio.** {*;}
+-dontwarn java.nio.**
+-keep class java.nio.** {*;}
