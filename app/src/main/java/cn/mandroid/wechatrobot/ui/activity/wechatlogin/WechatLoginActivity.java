@@ -18,6 +18,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.mandroid.wechatrobot.R;
 import cn.mandroid.wechatrobot.ui.activity.common.BaseActivity;
+import cn.mandroid.wechatrobot.ui.widget.RoundCornerImageView;
+import cn.mandroid.wechatrobot.utils.ImageLoader;
 
 public class WechatLoginActivity extends BaseActivity<WechatLoginContract.Presenter> implements WechatLoginContract.View {
 
@@ -25,7 +27,7 @@ public class WechatLoginActivity extends BaseActivity<WechatLoginContract.Presen
     Toolbar mToolBar;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
-    ImageView mQrcodeImageView;
+    RoundCornerImageView mQrcodeImageView;
     TextView mPcOpenQrcodeNoticeTv;
     private WechatLoginViewPagerAdapter mWechatLoginViewPagerAdapter;
 
@@ -37,16 +39,15 @@ public class WechatLoginActivity extends BaseActivity<WechatLoginContract.Presen
     @Override
     protected void afterView() {
         setSupportActionBar(mToolBar);
-        setActionBarTitle("微信认证11");
+        setActionBarTitle("微信认证");
         setViewPager();
         mPersenter.getUUID();
-        showToast("卧槽");
     }
 
     private void setViewPager() {
         List<View> views = new ArrayList<>();
         View qrscanContainer = LayoutInflater.from(this).inflate(R.layout.view_pager_scan_qrcode, null);
-        mQrcodeImageView = (ImageView) qrscanContainer.findViewById(R.id.qrcodeImageView);
+        mQrcodeImageView = (RoundCornerImageView) qrscanContainer.findViewById(R.id.qrcodeImageView);
         mPcOpenQrcodeNoticeTv = (TextView) qrscanContainer.findViewById(R.id.pcOpenQrcodeNotice);
         views.add(qrscanContainer);
         mWechatLoginViewPagerAdapter = new WechatLoginViewPagerAdapter(this, views);
@@ -78,8 +79,8 @@ public class WechatLoginActivity extends BaseActivity<WechatLoginContract.Presen
     }
 
     @Override
-    public void setQrcodeImage(Bitmap bitmap) {
-        mQrcodeImageView.setImageBitmap(bitmap);
+    public void setQrcodeImage(String url) {
+        ImageLoader.load(url, false).into(mQrcodeImageView);
     }
 
     @Override

@@ -41,7 +41,8 @@ public class Base64 {
     }
 
     public static String encode(String data) {
-        return new String(encode(data.getBytes()));
+        byte[] b = data.getBytes();
+        return new String(encode(b));
     }
 
     public static byte[] decode(char[] data) {

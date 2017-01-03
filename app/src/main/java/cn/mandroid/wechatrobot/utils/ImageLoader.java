@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.SoftReference;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,6 +27,7 @@ import java.util.concurrent.Executors;
 
 import cn.mandroid.wechatrobot.R;
 import cn.mandroid.wechatrobot.WechatRobotApp;
+import cn.mandroid.wechatrobot.model.common.HttpBody;
 import cn.mandroid.wechatrobot.model.entity.IImageLoader;
 
 /**
@@ -54,31 +53,45 @@ public class ImageLoader {
      * 避免重复下载
      */
     private static List<String> downloadingUrlCache;
+    private static String cacheDir;
 
     static {
         sNetworkExecutorService = Executors.newSingleThreadExecutor();
         sDiskExecutorService = Executors.newFixedThreadPool(5);
         downloadingUrlCache = new ArrayList<>();
+        mContext = WechatRobotApp.getApplication();
+        cacheDir = mContext.getCacheDir().getPath() + "/imageloader";
+        File file = new File(cacheDir);
+        if (file == null || !file.exists() || !file.isDirectory()) {
+            file.mkdirs();
+        }
     }
 
     public static ImageHelper load(String url) {
-        return load(WechatRobotApp.getApplication(), url, 0);
+        return load(url, true);
+    }
+
+    public static ImageHelper load(String url, boolean cacheable) {
+        return load(url, 0, cacheable);
     }
 
     public static ImageHelper load(String url, @DrawableRes int defaultImg) {
-        return load(WechatRobotApp.getApplication(), url, defaultImg);
+        return load(url, defaultImg, true);
     }
 
-    private static ImageHelper load(Context context, final String url, @DrawableRes int defaultImg) {
+    private static ImageHelper load(final String url, @DrawableRes int defaultImg, boolean cacheable) {
         final BitmapHelper imageHelper = new ImageHelperImpl();
-        mContext = context;
         imageHelper.setDefaultImage(defaultImg);
         if (!TextUtils.isEmpty(url)) {
             imageHelper.setBitmapUrl(url);
             if (isBitmapExist(url)) {
                 imageHelper.loadFinished();
             } else {
-                sDiskExecutorService.submit(fromDiskCache(url, imageHelper));
+                if (cacheable) {
+                    sDiskExecutorService.submit(fromDiskCache(url, imageHelper));
+                } else {
+                    sNetworkExecutorService.submit(fromNetwork(url, imageHelper, cacheable));
+                }
             }
         } else {
             cache.put(url, new SoftReference<>(BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher)));
@@ -88,41 +101,64 @@ public class ImageLoader {
         return imageHelper;
     }
 
-    private static Runnable fromNetwork(final String url, final BitmapHelper imageHelper) {
+    private static Runnable fromNetwork(final String url, final BitmapHelper imageHelper, final boolean cacheable) {
         return new Runnable() {
             @Override
             public void run() {
+                InputStream is = null;
+                ByteArrayOutputStream baos = null;
+                InputStream cacheStream = null;
+                InputStream btStream = null;
                 try {
-                    if (downloadingUrlCache.contains(url)) {
+                    if (cacheable && downloadingUrlCache.contains(url)) {
                         fromDiskCache(url, imageHelper);
                         return;
                     }
                     downloadingUrlCache.add(url);
-                    URL u = new URL(url);
-                    HttpURLConnection connection = (HttpURLConnection) u.openConnection();
-                    connection.setRequestMethod("GET");
-                    connection.connect();
-                    if (connection.getResponseCode() == 200) {
-                        InputStream is = connection.getInputStream();
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    HttpBody.Query query = new HttpBody.Query();
+                    is = query.downloadAsInputStream(url);
+                    if (is != null) {
+                        baos = new ByteArrayOutputStream();
                         byte[] buffer = new byte[1024];
                         int len;
                         while ((len = is.read(buffer)) > -1) {
                             baos.write(buffer, 0, len);
                         }
                         baos.flush();
-                        InputStream cacheStream = new ByteArrayInputStream(baos.toByteArray());
-                        InputStream btStream = new ByteArrayInputStream(baos.toByteArray());
+                        cacheStream = new ByteArrayInputStream(baos.toByteArray());
+                        btStream = new ByteArrayInputStream(baos.toByteArray());
                         Bitmap bitmap = BitmapFactory.decodeStream(btStream);
                         if (bitmap != null) {
                             imageHelper.setBitmap(bitmap);
-                            inputstreamtofile(cacheStream, url);
+                            if (cacheable) {
+                                inputstreamtofile(cacheStream, url);
+                            } else {
+                                cacheStream.close();
+                            }
+                            btStream.close();
                         } else {
                             imageHelper.setIsEmptyBitmap(true);
                         }
                         imageHelper.loadFinished();
+                        is.close();
                     }
                 } catch (Exception e) {
+                    try {
+                        if (is != null) {
+                            is.close();
+                        }
+                        if (baos != null) {
+                            baos.close();
+                        }
+                        if (cacheStream != null) {
+                            cacheStream.close();
+                        }
+                        if (btStream != null) {
+                            btStream.close();
+                        }
+                    } catch (IOException e1) {
+                        MLog.e(e1.getMessage());
+                    }
                     imageHelper.setIsEmptyBitmap(true);
                     imageHelper.loadFinished();
                 }
@@ -131,8 +167,8 @@ public class ImageLoader {
     }
 
     private static File getCacheFile(String url) {
-        final String urlstr = Base64.encode(url);
-        return new File(mContext.getCacheDir().getPath(), urlstr);
+        String urlstr = MD5.encode(url);
+        return new File(cacheDir, urlstr);
     }
 
     private static Runnable fromDiskCache(final String url, final BitmapHelper imageHelper) {
@@ -146,10 +182,10 @@ public class ImageLoader {
                         imageHelper.setBitmap(bitmap);
                         imageHelper.loadFinished();
                     } else {
-                        sNetworkExecutorService.submit(fromNetwork(url, imageHelper));
+                        sNetworkExecutorService.submit(fromNetwork(url, imageHelper, true));
                     }
                 } else {
-                    sNetworkExecutorService.submit(fromNetwork(url, imageHelper));
+                    sNetworkExecutorService.submit(fromNetwork(url, imageHelper, true));
                 }
             }
         };
@@ -172,6 +208,7 @@ public class ImageLoader {
                 os.write(buffer, 0, bytesRead);
             }
             os.close();
+            ins.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -288,6 +325,7 @@ public class ImageLoader {
     }
 
     public interface ImageHelper {
+
         void into(ImageView imageView);
 
         void into(IImageLoader imageLoader);

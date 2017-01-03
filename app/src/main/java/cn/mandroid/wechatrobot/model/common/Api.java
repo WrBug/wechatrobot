@@ -42,7 +42,7 @@ public class Api {
         mClinet = new OkHttpClient.Builder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(20000, TimeUnit.SECONDS).build();
     }
 
-    public static Observable<String> doOtherApiGet(final String url, final BaseCloudSource.Query query) {
+    public static Observable<String> doOtherApiGet(final String url, final HttpBody.Query query) {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
@@ -61,7 +61,7 @@ public class Api {
         });
     }
 
-    public static Observable<BaseRequestBean> doOtherApiGet(final String url, @Nullable final BaseCloudSource.Query map, final boolean getSetCookie) {
+    public static Observable<BaseRequestBean> doOtherApiGet(final String url, @Nullable final HttpBody.Query map, final boolean getSetCookie) {
         return Observable.create(new Observable.OnSubscribe<BaseRequestBean>() {
             @Override
             public void call(Subscriber<? super BaseRequestBean> subscriber) {
@@ -83,20 +83,28 @@ public class Api {
         });
     }
 
-    public static Observable<File> getFile(final String url, final BaseCloudSource.Query params) {
+    public static Observable<File> getFile(final String url, final HttpBody.Query params) {
         return Observable.create(new Observable.OnSubscribe<File>() {
             @Override
             public void call(Subscriber<? super File> subscriber) {
-                ResponseBody body = getResponseBody(url, params);
-                InputStream is = body.byteStream();
-                File file = new File(WechatRobotApp.getApplication().getExternalCacheDir(), url.substring(url.lastIndexOf("/")));
-                subscriber.onNext(FileUtil.inputstream2File(is, file));
+                subscriber.onNext(downloadAsFile(url, params));
             }
         });
 
     }
 
-    private static ResponseBody getResponseBody(String url, BaseCloudSource.Query query, boolean getSetCookie) {
+    public static InputStream downloadAsInputStream(String url, final HttpBody.Query params) {
+        ResponseBody body = getResponseBody(url, params);
+        InputStream is = body.byteStream();
+        return is;
+    }
+
+    public static File downloadAsFile(String url, final HttpBody.Query params) {
+        File file = new File(WechatRobotApp.getApplication().getExternalCacheDir(), url.substring(url.lastIndexOf("/")));
+        return FileUtil.inputstream2File(downloadAsInputStream(url, params), file);
+    }
+
+    private static ResponseBody getResponseBody(String url, HttpBody.Query query, boolean getSetCookie) {
         String params = query.getParams();
         final String finalUrl = url + params;
         try {
@@ -128,12 +136,12 @@ public class Api {
         }
     }
 
-    private static ResponseBody getResponseBody(String url, BaseCloudSource.Query query) {
+    private static ResponseBody getResponseBody(String url, HttpBody.Query query) {
         return getResponseBody(url, query, false);
     }
 
 
-    public static Observable<String> doOtherApiPost(final String url, final BaseCloudSource.Parameter parameter) {
+    public static Observable<String> doOtherApiPost(final String url, final HttpBody.Parameter parameter) {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {

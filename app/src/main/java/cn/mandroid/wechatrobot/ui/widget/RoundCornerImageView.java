@@ -38,8 +38,9 @@ public class RoundCornerImageView extends ImageView {
 
     private void init(AttributeSet attrs) {
         mTypedArray = getContext().obtainStyledAttributes(attrs, R.styleable.RoundCornerImageView);
-        roundCornerRadius = mTypedArray.getDimension(R.styleable.RoundCornerImageView_roundCornerRadius, 10);
+        roundCornerRadius = mTypedArray.getDimension(R.styleable.RoundCornerImageView_roundCornerRadius, 0);
         defaultSrcId = mTypedArray.getResourceId(R.styleable.RoundCornerImageView_defaultSrc, 0);
+        mTypedArray.recycle();
         setImageResource(defaultSrcId);
     }
 

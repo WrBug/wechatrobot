@@ -130,19 +130,12 @@ public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View
     }
 
     private void getQrCode(String uuid) {
-        mView.setActionBarSubTitle("获取二维码");
-        mWechatAuthenticationRepository.getQrcode(uuid, new IWechatAuthenticationCloudSource.GetQrcodeCallback() {
-            @Override
-            public void onSuccess(File file) {
-                Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-                mView.setQrcodeImage(bitmap);
-                mView.setActionBarSubTitle("等待扫描");
-            }
-
-            @Override
-            public void onError() {
-            }
-        });
+        mView.setActionBarSubTitle("等待扫描");
+        StringBuilder builder = new StringBuilder("https://login.weixin.qq.com/qrcode/");
+        builder.append(uuid).append("?")
+                .append("t=webwx").append("&")
+                .append("_=").append(System.currentTimeMillis());
+        mView.setQrcodeImage(builder.toString());
     }
 
     @Override
