@@ -40,6 +40,10 @@ public class Base64 {
         return out;
     }
 
+    public static String encode(String data) {
+        return new String(encode(data.getBytes()));
+    }
+
     public static byte[] decode(char[] data) {
         int len = (data.length + 3) / 4 * 3;
         if ((data.length > 0) && (data[(data.length - 1)] == '=')) {

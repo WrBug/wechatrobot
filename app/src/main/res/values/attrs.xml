@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RoundCornerImageView">
+        <attr name="roundCornerRadius" format="dimension"/>
+        <attr name="defaultSrc" format="reference"/>
+    </declare-styleable>
+</resources>
