@@ -1,4 +1,4 @@
-package cn.mandroid.wechatrobot.model.repository;
+package cn.mandroid.wechatrobot.model.repository.wechatauth;
 
 import java.io.File;
 import java.util.Map;

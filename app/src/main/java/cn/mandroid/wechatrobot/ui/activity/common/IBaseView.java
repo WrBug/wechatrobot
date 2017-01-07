@@ -53,4 +53,9 @@ public interface IBaseView {
     void setActionBarSubTitle(String subTitle);
 
     void setActionBarSubTitle(int resId);
+
+    /**
+     * 进入登录页
+     */
+    void enterLoginActivity();
 }

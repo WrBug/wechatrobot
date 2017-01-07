@@ -1,30 +1,27 @@
 package cn.mandroid.wechatrobot.ui.activity.home;
 
-import android.content.Intent;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 import butterknife.BindView;
 import cn.mandroid.wechatrobot.R;
 import cn.mandroid.wechatrobot.ui.activity.common.BaseActivity;
-import cn.mandroid.wechatrobot.ui.activity.wechatlogin.WechatLoginActivity;
 
 public class HomeActivity extends BaseActivity<HomeContract.Presenter> implements HomeContract.View {
 
 
-    @BindView(R.id.activity_main)
-    RelativeLayout mActivityMain;
-    @BindView(R.id.textView)
-    TextView mTextView;
+    @BindView(R.id.toolBar)
+    Toolbar mToolBar;
 
     @Override
     protected int setContentView() {
-        return R.layout.activity_main;
+        return R.layout.activity_home;
     }
 
     @Override
     protected void afterView() {
+        mPersenter.loadUserInfo();
     }
+
 
     @Override
     protected HomeContract.Presenter setPresenter() {
@@ -32,5 +29,9 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
         return presenter;
     }
 
+    @Override
+    public void setNickname(String nickname) {
+        mToolBar.setTitle(nickname);
+    }
 
 }

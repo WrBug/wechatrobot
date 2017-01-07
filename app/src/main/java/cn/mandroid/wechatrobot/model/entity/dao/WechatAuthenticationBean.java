@@ -14,6 +14,8 @@ import java.util.Map;
 
 import org.greenrobot.greendao.annotation.Generated;
 
+import cn.mandroid.wechatrobot.model.entity.wechat.WechatSyncKeyBean;
+
 /**
  * Created by wrBug on 2017/1/1.
  */
@@ -31,10 +33,12 @@ public class WechatAuthenticationBean {
     private String baseRequestStr;
     @Transient
     private Map<String, String> baseRequest;
+    private String syncKey;
+    private String syncKeyJson;
 
-    @Generated(hash = 295861163)
-    public WechatAuthenticationBean(String uid, String redirectUrl, String baseUrl, String skey,
-            String sid, long uin, String passTicket, String cookie, String baseRequestStr) {
+    @Generated(hash = 941076479)
+    public WechatAuthenticationBean(String uid, String redirectUrl, String baseUrl, String skey, String sid, long uin,
+                                    String passTicket, String cookie, String baseRequestStr, String syncKey, String syncKeyJson) {
         this.uid = uid;
         this.redirectUrl = redirectUrl;
         this.baseUrl = baseUrl;
@@ -44,6 +48,8 @@ public class WechatAuthenticationBean {
         this.passTicket = passTicket;
         this.cookie = cookie;
         this.baseRequestStr = baseRequestStr;
+        this.syncKey = syncKey;
+        this.syncKeyJson = syncKeyJson;
     }
 
     @Generated(hash = 1672662466)
@@ -73,6 +79,27 @@ public class WechatAuthenticationBean {
         this.baseRequest.put("Uin", this.uin + "");
         this.baseRequest.put("DeviceID", createDeviceId());
         this.baseRequestStr = new GsonBuilder().create().toJson(this.baseRequest);
+    }
+
+    public String getSyncKey() {
+        return syncKey;
+    }
+
+    public WechatSyncKeyBean getWechatSyncKeyBean() {
+        if (!TextUtils.isEmpty(syncKeyJson)) {
+            return new GsonBuilder().create().fromJson(syncKeyJson, WechatSyncKeyBean.class);
+        }
+        return null;
+    }
+
+    public void setSyncKey(WechatSyncKeyBean syncKey) {
+        StringBuilder builder = new StringBuilder();
+        for (WechatSyncKeyBean.ListBean listBean : syncKey.getList()) {
+            builder.append(listBean.getKey()).append("_").append(listBean.getVal()).append("|");
+        }
+        builder.deleteCharAt(builder.length() - 1);
+        this.syncKey = builder.toString();
+        this.syncKeyJson = syncKey.toJson();
     }
 
     private String createDeviceId() {
@@ -149,5 +176,17 @@ public class WechatAuthenticationBean {
 
     public void setBaseRequestStr(String baseRequestStr) {
         this.baseRequestStr = baseRequestStr;
+    }
+
+    public void setSyncKey(String syncKey) {
+        this.syncKey = syncKey;
+    }
+
+    public void setSyncKeyJson(String syncKeyJson) {
+        this.syncKeyJson = syncKeyJson;
+    }
+
+    public String getSyncKeyJson() {
+        return this.syncKeyJson;
     }
 }

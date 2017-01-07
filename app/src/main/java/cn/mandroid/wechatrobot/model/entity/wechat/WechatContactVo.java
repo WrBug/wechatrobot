@@ -1,9 +1,12 @@
 package cn.mandroid.wechatrobot.model.entity.wechat;
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 import cn.mandroid.wechatrobot.model.entity.BaseBean;
+import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 
 /**
  * Created by wrBug on 2016/12/21.
@@ -15,6 +18,7 @@ public class WechatContactVo extends BaseBean {
     private String NickName;
     private String HeadImgUrl;
     private int ContactFlag;
+    @SerializedName(value = "MemberCount", alternate = {"Count"})
     private int MemberCount;
     private String RemarkName;
     private int HideInputBarFlag;
@@ -39,7 +43,10 @@ public class WechatContactVo extends BaseBean {
     private int ChatRoomId;
     private String KeyWord;
     private String EncryChatRoomId;
-    private List<?> MemberList;
+    private int Seq;
+    private WechatBaseResponseBean BaseResponse;
+    @SerializedName(value = "ContactList", alternate = {"MemberList"})
+    private List<WechatUserBean> MemberList;
 
     public int getUin() {
         return Uin;
@@ -273,11 +280,27 @@ public class WechatContactVo extends BaseBean {
         this.EncryChatRoomId = EncryChatRoomId;
     }
 
-    public List<?> getMemberList() {
+    public int getSeq() {
+        return Seq;
+    }
+
+    public void setSeq(int seq) {
+        Seq = seq;
+    }
+
+    public WechatBaseResponseBean getBaseResponse() {
+        return BaseResponse;
+    }
+
+    public void setBaseResponse(WechatBaseResponseBean baseResponse) {
+        BaseResponse = baseResponse;
+    }
+
+    public List<WechatUserBean> getMemberList() {
         return MemberList;
     }
 
-    public void setMemberList(List<?> MemberList) {
+    public void setMemberList(List<WechatUserBean> MemberList) {
         this.MemberList = MemberList;
     }
 }

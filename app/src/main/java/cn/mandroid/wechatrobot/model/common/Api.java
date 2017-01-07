@@ -55,7 +55,7 @@ public class Api {
                     subscriber.onNext(body.string());
                 } catch (IOException e) {
                     subscriber.onError(e);
-                    MLog.e(e.getMessage());
+                    MLog.e(e);
                 }
             }
         });
@@ -77,7 +77,7 @@ public class Api {
                     subscriber.onNext(baseRequestBean);
                 } catch (IOException e) {
                     subscriber.onError(e);
-                    MLog.e(e.getMessage());
+                    MLog.e(e);
                 }
             }
         });
@@ -116,13 +116,17 @@ public class Api {
             }
             return response.body();
         } catch (IOException e) {
-            MLog.e(e.getMessage());
+            MLog.e(e);
         }
         return null;
     }
 
     public static void setCookie(String cookie) {
         sCookie = cookie;
+    }
+
+    public static void cleanCookie() {
+        setCookie("");
     }
 
     private static void setCookie(Response response) {
@@ -155,7 +159,7 @@ public class Api {
                     Response response = mClinet.newCall(request).execute();
                     subscriber.onNext(response.body().string());
                 } catch (IOException e) {
-                    MLog.e(e.getMessage());
+                    MLog.e(e);
                     subscriber.onError(e);
                 }
             }

@@ -10,6 +10,7 @@ import cn.mandroid.wechatrobot.ui.activity.wechatlogin.WechatLoginActivity;
 public class WelcomeActivity extends BaseActivity<WelcomeContract.Presenter> implements WelcomeContract.View {
 
 
+
     @Override
     protected int setContentView() {
         return R.layout.activity_welcome;
@@ -24,13 +25,6 @@ public class WelcomeActivity extends BaseActivity<WelcomeContract.Presenter> imp
     protected WelcomeContract.Presenter setPresenter() {
         return new WelcomePresenter(this);
     }
-
-    @Override
-    public void enterLoginActivity() {
-        startActivity(new Intent(this, WechatLoginActivity.class));
-        finish();
-    }
-
     @Override
     public void enterHomeActivity() {
         startActivity(new Intent(this, HomeActivity.class));

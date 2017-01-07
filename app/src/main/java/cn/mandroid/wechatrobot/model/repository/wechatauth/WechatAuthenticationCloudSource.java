@@ -1,4 +1,4 @@
-package cn.mandroid.wechatrobot.model.repository;
+package cn.mandroid.wechatrobot.model.repository.wechatauth;
 
 import android.text.TextUtils;
 
@@ -39,7 +39,7 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
                     @Override
                     public void onError(Throwable e) {
                         callback.onError();
-                        MLog.e(e.getMessage());
+                        MLog.e(e);
                     }
 
                     @Override
@@ -70,7 +70,7 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
 
                     @Override
                     public void onError(Throwable e) {
-                        MLog.e(e.getMessage());
+                        MLog.e(e);
                         callback.onError();
                     }
 
@@ -219,7 +219,7 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
 
                     @Override
                     public void onError(Throwable e) {
-                        MLog.e(e.getMessage());
+                        MLog.e(e);
                         callback.onError();
                     }
 

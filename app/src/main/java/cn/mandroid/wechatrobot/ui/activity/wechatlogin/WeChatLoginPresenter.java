@@ -6,10 +6,9 @@ import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
 import cn.mandroid.wechatrobot.model.entity.wechat.WechatSyncKeyBean;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
-import cn.mandroid.wechatrobot.model.repository.IWechatAuthenticationCloudSource;
-import cn.mandroid.wechatrobot.model.repository.WechatAuthenticationRepository;
+import cn.mandroid.wechatrobot.model.repository.wechatauth.IWechatAuthenticationCloudSource;
+import cn.mandroid.wechatrobot.model.repository.wechatauth.WechatAuthenticationRepository;
 import cn.mandroid.wechatrobot.ui.activity.common.BasePresenter;
-import cn.mandroid.wechatrobot.utils.MLog;
 
 /**
  * Created by wrBug on 2017/1/1.
@@ -103,6 +102,7 @@ public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View
                     @Override
                     public void onSuccess(WechatUserBean userBean, WechatSyncKeyBean syncKeyBean) {
                         mWechatAuthenticationBean.setUid(userBean.getUserName());
+                        mWechatAuthenticationBean.setSyncKey(syncKeyBean);
                         mWechatAuthenticationRepository.saveWechatAuthInfo(mWechatAuthenticationBean);
                         LoginWechatUser user = new LoginWechatUser(userBean.getUin());
                         user.setWechatUserBean(userBean);

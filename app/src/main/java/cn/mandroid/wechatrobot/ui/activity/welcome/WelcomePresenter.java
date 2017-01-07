@@ -6,7 +6,7 @@ import cn.mandroid.wechatrobot.model.common.Injection;
 import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
-import cn.mandroid.wechatrobot.model.repository.WechatAuthenticationRepository;
+import cn.mandroid.wechatrobot.model.repository.wechatauth.WechatAuthenticationRepository;
 import cn.mandroid.wechatrobot.ui.activity.common.BasePresenter;
 
 /**

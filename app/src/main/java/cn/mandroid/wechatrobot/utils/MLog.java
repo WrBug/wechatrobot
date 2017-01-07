@@ -29,6 +29,12 @@ public class MLog {
         }
     }
 
+    public static void e(Throwable e) {
+        if (BuildConfig.DEBUG) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+    }
+
     public static void d(Object o) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, String.valueOf(o));

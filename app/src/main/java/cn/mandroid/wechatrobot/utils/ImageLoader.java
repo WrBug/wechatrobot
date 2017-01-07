@@ -157,7 +157,7 @@ public class ImageLoader {
                             btStream.close();
                         }
                     } catch (IOException e1) {
-                        MLog.e(e1.getMessage());
+                        MLog.e(e1);
                     }
                     imageHelper.setIsEmptyBitmap(true);
                     imageHelper.loadFinished();

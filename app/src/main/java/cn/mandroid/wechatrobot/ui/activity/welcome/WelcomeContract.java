@@ -9,7 +9,6 @@ import cn.mandroid.wechatrobot.ui.activity.common.IBaseView;
 
 public class WelcomeContract {
     interface View extends IBaseView {
-        void enterLoginActivity();
 
         void enterHomeActivity();
     }

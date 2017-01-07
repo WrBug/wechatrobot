@@ -1,4 +1,4 @@
-package cn.mandroid.wechatrobot.model.repository;
+package cn.mandroid.wechatrobot.model.repository.wechatauth;
 
 import java.util.Map;
 
@@ -20,7 +20,9 @@ public class WechatAuthenticationRepository {
 
     public static WechatAuthenticationRepository getInstant() {
         if (INSTANCE == null) {
-            INSTANCE = new WechatAuthenticationRepository();
+            synchronized (WechatAuthenticationRepository.class) {
+                INSTANCE = new WechatAuthenticationRepository();
+            }
         }
         return INSTANCE;
     }

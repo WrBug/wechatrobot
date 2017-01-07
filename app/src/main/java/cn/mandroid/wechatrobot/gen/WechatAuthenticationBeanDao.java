@@ -33,6 +33,8 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
         public final static Property PassTicket = new Property(6, String.class, "passTicket", false, "PASS_TICKET");
         public final static Property Cookie = new Property(7, String.class, "cookie", false, "COOKIE");
         public final static Property BaseRequestStr = new Property(8, String.class, "baseRequestStr", false, "BASE_REQUEST_STR");
+        public final static Property SyncKey = new Property(9, String.class, "syncKey", false, "SYNC_KEY");
+        public final static Property SyncKeyJson = new Property(10, String.class, "syncKeyJson", false, "SYNC_KEY_JSON");
     }
 
 
@@ -56,7 +58,9 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
                 "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 5: uin
                 "\"PASS_TICKET\" TEXT," + // 6: passTicket
                 "\"COOKIE\" TEXT," + // 7: cookie
-                "\"BASE_REQUEST_STR\" TEXT);"); // 8: baseRequestStr
+                "\"BASE_REQUEST_STR\" TEXT," + // 8: baseRequestStr
+                "\"SYNC_KEY\" TEXT," + // 9: syncKey
+                "\"SYNC_KEY_JSON\" TEXT);"); // 10: syncKeyJson
     }
 
     /** Drops the underlying database table. */
@@ -109,6 +113,16 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
         if (baseRequestStr != null) {
             stmt.bindString(9, baseRequestStr);
         }
+ 
+        String syncKey = entity.getSyncKey();
+        if (syncKey != null) {
+            stmt.bindString(10, syncKey);
+        }
+ 
+        String syncKeyJson = entity.getSyncKeyJson();
+        if (syncKeyJson != null) {
+            stmt.bindString(11, syncKeyJson);
+        }
     }
 
     @Override
@@ -155,6 +169,16 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
         if (baseRequestStr != null) {
             stmt.bindString(9, baseRequestStr);
         }
+ 
+        String syncKey = entity.getSyncKey();
+        if (syncKey != null) {
+            stmt.bindString(10, syncKey);
+        }
+ 
+        String syncKeyJson = entity.getSyncKeyJson();
+        if (syncKeyJson != null) {
+            stmt.bindString(11, syncKeyJson);
+        }
     }
 
     @Override
@@ -173,7 +197,9 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
             cursor.getLong(offset + 5), // uin
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // passTicket
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // cookie
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // baseRequestStr
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // baseRequestStr
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // syncKey
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10) // syncKeyJson
         );
         return entity;
     }
@@ -189,6 +215,8 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
         entity.setPassTicket(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setCookie(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setBaseRequestStr(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setSyncKey(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setSyncKeyJson(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
      }
     
     @Override

@@ -26,7 +26,7 @@ public class WechatSyncKeyBean extends BaseBean {
         this.Count = Count;
     }
 
-    public java.util.List<ListBean> getList() {
+    public List<ListBean> getList() {
         return List;
     }
 

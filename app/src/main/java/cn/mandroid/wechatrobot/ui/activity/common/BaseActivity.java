@@ -1,6 +1,7 @@
 package cn.mandroid.wechatrobot.ui.activity.common;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -16,6 +17,8 @@ import java.util.logging.Logger;
 
 import butterknife.ButterKnife;
 import cn.mandroid.wechatrobot.BuildConfig;
+import cn.mandroid.wechatrobot.model.common.Api;
+import cn.mandroid.wechatrobot.ui.activity.wechatlogin.WechatLoginActivity;
 import cn.mandroid.wechatrobot.utils.MLog;
 
 /**
@@ -106,6 +109,16 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
     @Override
     public void showProgress() {
 
+    }
+
+    /**
+     * 进入登录页
+     */
+    @Override
+    public void enterLoginActivity() {
+        Api.cleanCookie();
+        startActivity(new Intent(this, WechatLoginActivity.class));
+        finish();
     }
 
     @Override

@@ -9,13 +9,10 @@ import cn.mandroid.wechatrobot.ui.activity.common.IBaseView;
 
 public class HomeContract {
     public interface View extends IBaseView {
-
+        void setNickname(String nickname);
     }
 
     public interface Presenter extends IBasePresenter {
-        /**
-         * 获取uuid
-         */
-        void getUUID();
+        void loadUserInfo();
     }
 }

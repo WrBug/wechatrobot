@@ -1,9 +1,8 @@
-package cn.mandroid.wechatrobot.model.repository;
+package cn.mandroid.wechatrobot.model.repository.wechatauth;
 
 import cn.mandroid.wechatrobot.model.common.BaseLocalSource;
 import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
-import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 
 /**
  * Created by wrBug on 2017/1/2.
