@@ -54,7 +54,8 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
 
     protected abstract void afterView();
 
-    protected abstract void beforeInject();
+    protected void beforeInject() {
+    }
 
     protected abstract T setPresenter();
 

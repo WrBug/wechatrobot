@@ -18,9 +18,23 @@ public interface IWechatAuthenticationLocalSource {
 
     /**
      * 保存用户信息
+     *
      * @param wechatUserBean
      */
-    void saveWechatUser(WechatUserBean wechatUserBean);
+    void saveLoginWechatUser(LoginWechatUser wechatUserBean);
 
-    void saveLoginWechatUser(LoginWechatUser loginWechatUser);
+    /**
+     * 获取已登录用户信息
+     *
+     * @return
+     */
+    LoginWechatUser getLoginWechatUser();
+
+    /**
+     * 获取登录信息
+     *
+     * @param uin
+     * @return
+     */
+    WechatAuthenticationBean getWechatAuthInfo(long uin);
 }

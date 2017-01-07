@@ -1,18 +1,13 @@
 package cn.mandroid.wechatrobot.gen;
 
-import java.util.List;
-import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
 
 import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.Property;
-import org.greenrobot.greendao.internal.SqlUtils;
 import org.greenrobot.greendao.internal.DaoConfig;
 import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseStatement;
-
-import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 
 import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
 
@@ -20,7 +15,7 @@ import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
 /** 
  * DAO for table "LOGIN_WECHAT_USER".
 */
-public class LoginWechatUserDao extends AbstractDao<LoginWechatUser, String> {
+public class LoginWechatUserDao extends AbstractDao<LoginWechatUser, Long> {
 
     public static final String TABLENAME = "LOGIN_WECHAT_USER";
 
@@ -29,11 +24,10 @@ public class LoginWechatUserDao extends AbstractDao<LoginWechatUser, String> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Uin = new Property(0, String.class, "uin", true, "UIN");
-        public final static Property MWechatUserBean = new Property(1, String.class, "mWechatUserBean", false, "M_WECHAT_USER_BEAN");
+        public final static Property Id = new Property(0, long.class, "id", true, "_id");
+        public final static Property Uin = new Property(1, long.class, "uin", false, "UIN");
+        public final static Property WechatUser = new Property(2, String.class, "wechatUser", false, "WECHAT_USER");
     }
-
-    private DaoSession daoSession;
 
 
     public LoginWechatUserDao(DaoConfig config) {
@@ -42,15 +36,15 @@ public class LoginWechatUserDao extends AbstractDao<LoginWechatUser, String> {
     
     public LoginWechatUserDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
-        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"LOGIN_WECHAT_USER\" (" + //
-                "\"UIN\" TEXT PRIMARY KEY NOT NULL UNIQUE ," + // 0: uin
-                "\"M_WECHAT_USER_BEAN\" TEXT);"); // 1: mWechatUserBean
+                "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: id
+                "\"UIN\" INTEGER NOT NULL ," + // 1: uin
+                "\"WECHAT_USER\" TEXT);"); // 2: wechatUser
     }
 
     /** Drops the underlying database table. */
@@ -62,56 +56,59 @@ public class LoginWechatUserDao extends AbstractDao<LoginWechatUser, String> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, LoginWechatUser entity) {
         stmt.clearBindings();
+        stmt.bindLong(1, entity.getId());
+        stmt.bindLong(2, entity.getUin());
  
-        String uin = entity.getUin();
-        if (uin != null) {
-            stmt.bindString(1, uin);
+        String wechatUser = entity.getWechatUser();
+        if (wechatUser != null) {
+            stmt.bindString(3, wechatUser);
         }
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, LoginWechatUser entity) {
         stmt.clearBindings();
+        stmt.bindLong(1, entity.getId());
+        stmt.bindLong(2, entity.getUin());
  
-        String uin = entity.getUin();
-        if (uin != null) {
-            stmt.bindString(1, uin);
+        String wechatUser = entity.getWechatUser();
+        if (wechatUser != null) {
+            stmt.bindString(3, wechatUser);
         }
     }
 
     @Override
-    protected final void attachEntity(LoginWechatUser entity) {
-        super.attachEntity(entity);
-        entity.__setDaoSession(daoSession);
-    }
-
-    @Override
-    public String readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.getLong(offset + 0);
     }    
 
     @Override
     public LoginWechatUser readEntity(Cursor cursor, int offset) {
         LoginWechatUser entity = new LoginWechatUser( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0) // uin
+            cursor.getLong(offset + 0), // id
+            cursor.getLong(offset + 1), // uin
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // wechatUser
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, LoginWechatUser entity, int offset) {
-        entity.setUin(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
+        entity.setId(cursor.getLong(offset + 0));
+        entity.setUin(cursor.getLong(offset + 1));
+        entity.setWechatUser(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
      }
     
     @Override
-    protected final String updateKeyAfterInsert(LoginWechatUser entity, long rowId) {
-        return entity.getUin();
+    protected final Long updateKeyAfterInsert(LoginWechatUser entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public String getKey(LoginWechatUser entity) {
+    public Long getKey(LoginWechatUser entity) {
         if(entity != null) {
-            return entity.getUin();
+            return entity.getId();
         } else {
             return null;
         }
@@ -119,7 +116,7 @@ public class LoginWechatUserDao extends AbstractDao<LoginWechatUser, String> {
 
     @Override
     public boolean hasKey(LoginWechatUser entity) {
-        return entity.getUin() != null;
+        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
     }
 
     @Override
@@ -127,95 +124,4 @@ public class LoginWechatUserDao extends AbstractDao<LoginWechatUser, String> {
         return true;
     }
     
-    private String selectDeep;
-
-    protected String getSelectDeep() {
-        if (selectDeep == null) {
-            StringBuilder builder = new StringBuilder("SELECT ");
-            SqlUtils.appendColumns(builder, "T", getAllColumns());
-            builder.append(',');
-            SqlUtils.appendColumns(builder, "T0", daoSession.getWechatUserBeanDao().getAllColumns());
-            builder.append(" FROM LOGIN_WECHAT_USER T");
-            builder.append(" LEFT JOIN WECHAT_USER_BEAN T0 ON T.\"M_WECHAT_USER_BEAN\"=T0.\"USER_NAME\"");
-            builder.append(' ');
-            selectDeep = builder.toString();
-        }
-        return selectDeep;
-    }
-    
-    protected LoginWechatUser loadCurrentDeep(Cursor cursor, boolean lock) {
-        LoginWechatUser entity = loadCurrent(cursor, 0, lock);
-        int offset = getAllColumns().length;
-
-        WechatUserBean mWechatUserBean = loadCurrentOther(daoSession.getWechatUserBeanDao(), cursor, offset);
-        entity.setMWechatUserBean(mWechatUserBean);
-
-        return entity;    
-    }
-
-    public LoginWechatUser loadDeep(Long key) {
-        assertSinglePk();
-        if (key == null) {
-            return null;
-        }
-
-        StringBuilder builder = new StringBuilder(getSelectDeep());
-        builder.append("WHERE ");
-        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
-        String sql = builder.toString();
-        
-        String[] keyArray = new String[] { key.toString() };
-        Cursor cursor = db.rawQuery(sql, keyArray);
-        
-        try {
-            boolean available = cursor.moveToFirst();
-            if (!available) {
-                return null;
-            } else if (!cursor.isLast()) {
-                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
-            }
-            return loadCurrentDeep(cursor, true);
-        } finally {
-            cursor.close();
-        }
-    }
-    
-    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
-    public List<LoginWechatUser> loadAllDeepFromCursor(Cursor cursor) {
-        int count = cursor.getCount();
-        List<LoginWechatUser> list = new ArrayList<LoginWechatUser>(count);
-        
-        if (cursor.moveToFirst()) {
-            if (identityScope != null) {
-                identityScope.lock();
-                identityScope.reserveRoom(count);
-            }
-            try {
-                do {
-                    list.add(loadCurrentDeep(cursor, false));
-                } while (cursor.moveToNext());
-            } finally {
-                if (identityScope != null) {
-                    identityScope.unlock();
-                }
-            }
-        }
-        return list;
-    }
-    
-    protected List<LoginWechatUser> loadDeepAllAndCloseCursor(Cursor cursor) {
-        try {
-            return loadAllDeepFromCursor(cursor);
-        } finally {
-            cursor.close();
-        }
-    }
-    
-
-    /** A raw-style query where you can pass any WHERE clause and arguments. */
-    public List<LoginWechatUser> queryDeep(String where, String... selectionArg) {
-        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
-        return loadDeepAllAndCloseCursor(cursor);
-    }
- 
 }

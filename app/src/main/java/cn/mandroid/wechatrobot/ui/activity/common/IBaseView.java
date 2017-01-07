@@ -1,6 +1,7 @@
 package cn.mandroid.wechatrobot.ui.activity.common;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 /**
  * Created by wrBug on 2016/12/31.
@@ -25,6 +26,8 @@ public interface IBaseView {
     void exit();
 
     Context getActivity();
+
+    Resources getResources();
 
     /**
      * 打印日志

@@ -16,6 +16,9 @@
         <activity android:name=".ui.activity.home.HomeActivity">
         </activity>
         <activity android:name=".ui.activity.wechatlogin.WechatLoginActivity">
+
+        </activity>
+        <activity android:name=".ui.activity.welcome.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

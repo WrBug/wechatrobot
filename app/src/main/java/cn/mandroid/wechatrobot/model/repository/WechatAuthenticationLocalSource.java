@@ -26,12 +26,28 @@ public class WechatAuthenticationLocalSource extends BaseLocalSource implements 
      * @param wechatUserBean
      */
     @Override
-    public void saveWechatUser(WechatUserBean wechatUserBean) {
-        mDaoSession.getWechatUserBeanDao().insertOrReplace(wechatUserBean);
+    public void saveLoginWechatUser(LoginWechatUser wechatUserBean) {
+        mDaoSession.getLoginWechatUserDao().insertOrReplace(wechatUserBean);
     }
 
+    /**
+     * 获取已登录用户信息
+     *
+     * @return
+     */
     @Override
-    public void saveLoginWechatUser(LoginWechatUser loginWechatUser) {
+    public LoginWechatUser getLoginWechatUser() {
+        return mDaoSession.getLoginWechatUserDao().load(1l);
+    }
 
+    /**
+     * 获取登录信息
+     *
+     * @param uin
+     * @return
+     */
+    @Override
+    public WechatAuthenticationBean getWechatAuthInfo(long uin) {
+        return mDaoSession.getWechatAuthenticationBeanDao().load(uin);
     }
 }

@@ -10,4 +10,5 @@ public abstract class BasePresenter<T extends IBaseView> implements IBasePresent
     public BasePresenter(T view) {
         mView = view;
     }
+
 }

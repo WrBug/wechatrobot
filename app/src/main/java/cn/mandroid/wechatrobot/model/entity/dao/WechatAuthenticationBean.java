@@ -19,23 +19,22 @@ import org.greenrobot.greendao.annotation.Generated;
  */
 @Entity
 public class WechatAuthenticationBean {
-    @Id
     private String uid;
     private String redirectUrl;
     private String baseUrl;
     private String skey;
     private String sid;
-    private String uin;
+    @Id
+    private long uin;
     private String passTicket;
     private String cookie;
     private String baseRequestStr;
     @Transient
     private Map<String, String> baseRequest;
 
-    @Generated(hash = 1254755090)
-    public WechatAuthenticationBean(String uid, String redirectUrl, String baseUrl,
-                                    String skey, String sid, String uin, String passTicket, String cookie,
-                                    String baseRequestStr) {
+    @Generated(hash = 295861163)
+    public WechatAuthenticationBean(String uid, String redirectUrl, String baseUrl, String skey,
+            String sid, long uin, String passTicket, String cookie, String baseRequestStr) {
         this.uid = uid;
         this.redirectUrl = redirectUrl;
         this.baseUrl = baseUrl;
@@ -71,7 +70,7 @@ public class WechatAuthenticationBean {
         this.baseRequest = new HashMap<>();
         this.baseRequest.put("Skey", this.skey);
         this.baseRequest.put("Sid", this.sid);
-        this.baseRequest.put("Uin", this.uin);
+        this.baseRequest.put("Uin", this.uin + "");
         this.baseRequest.put("DeviceID", createDeviceId());
         this.baseRequestStr = new GsonBuilder().create().toJson(this.baseRequest);
     }
@@ -120,11 +119,11 @@ public class WechatAuthenticationBean {
         this.sid = sid;
     }
 
-    public String getUin() {
+    public long getUin() {
         return uin;
     }
 
-    public void setUin(String uin) {
+    public void setUin(long uin) {
         this.uin = uin;
     }
 

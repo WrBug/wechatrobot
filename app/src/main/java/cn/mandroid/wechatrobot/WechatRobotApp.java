@@ -1,18 +1,10 @@
 package cn.mandroid.wechatrobot;
 
 import android.app.Application;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
-
-import com.alipay.euler.andfix.patch.PatchManager;
-
-import java.io.File;
-import java.io.IOException;
 
 import cn.mandroid.wechatrobot.gen.DaoMaster;
 import cn.mandroid.wechatrobot.gen.DaoSession;
-import cn.mandroid.wechatrobot.utils.MLog;
 
 /**
  * Created by wrBug on 2017/1/1.
@@ -24,14 +16,12 @@ public class WechatRobotApp extends Application {
     private SQLiteDatabase db;
     private DaoMaster mDaoMaster;
     private DaoSession mDaoSession;
-    private static PatchManager patchManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
         INSTANCE = this;
         setDatabase();
-        initHotFix();
     }
 
     public static WechatRobotApp getApplication() {
@@ -59,31 +49,5 @@ public class WechatRobotApp extends Application {
 
     public SQLiteDatabase getDb() {
         return db;
-    }
-
-    private void initHotFix() {
-        patchManager = new PatchManager(this);
-        String version_name = BuildConfig.VERSION_NAME;
-        patchManager.init(version_name);
-        patchManager.loadPatch();
-        loadPatch();
-    }
-
-    public void loadPatch() {
-        String path = Environment.getExternalStorageDirectory()
-                .getAbsolutePath() + "/XiaoLuoBei/hot.apatch";
-        File file = new File(path);
-        addHotFixPatch(file);
-    }
-
-    public void addHotFixPatch(File file) {
-        if (file.exists()) {
-            MLog.i("加载补丁");
-            try {
-                patchManager.addPatch(file.getPath());
-            } catch (IOException e) {
-            }
-            file.delete();
-        }
     }
 }

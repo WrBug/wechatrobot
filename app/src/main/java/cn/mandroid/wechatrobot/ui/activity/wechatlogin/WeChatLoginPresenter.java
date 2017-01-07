@@ -1,12 +1,8 @@
 package cn.mandroid.wechatrobot.ui.activity.wechatlogin;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import java.io.File;
-
-import cn.mandroid.wechatrobot.WechatRobotApp;
+import cn.mandroid.wechatrobot.R;
 import cn.mandroid.wechatrobot.model.common.Injection;
+import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
 import cn.mandroid.wechatrobot.model.entity.wechat.WechatSyncKeyBean;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
@@ -83,7 +79,7 @@ public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View
     private void wechatLogin(String redirectUrl) {
         mWechatAuthenticationRepository.wechatLogin(redirectUrl, new IWechatAuthenticationCloudSource.WechatLoginCallback() {
             @Override
-            public void onSuccess(String skey, String sid, String uin, String passTicket, String cookie) {
+            public void onSuccess(String skey, String sid, long uin, String passTicket, String cookie) {
                 mWechatAuthenticationBean.setSkey(skey);
                 mWechatAuthenticationBean.setSid(sid);
                 mWechatAuthenticationBean.setUin(uin);
@@ -108,9 +104,11 @@ public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View
                     public void onSuccess(WechatUserBean userBean, WechatSyncKeyBean syncKeyBean) {
                         mWechatAuthenticationBean.setUid(userBean.getUserName());
                         mWechatAuthenticationRepository.saveWechatAuthInfo(mWechatAuthenticationBean);
-                        mWechatAuthenticationRepository.saveWechatUser(userBean);
-                        MLog.i(syncKeyBean.toJson());
-                        MLog.i(userBean.toJson());
+                        LoginWechatUser user = new LoginWechatUser(userBean.getUin());
+                        user.setWechatUserBean(userBean);
+                        mWechatAuthenticationRepository.saveLoginWechatUser(user);
+                        mView.showToast(userBean.getNickName() + ",欢迎使用" + mView.getResources().getString(R.string.app_name));
+                        mView.loginSuccess();
                     }
 
                     @Override

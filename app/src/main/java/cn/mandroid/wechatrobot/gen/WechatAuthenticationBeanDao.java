@@ -15,7 +15,7 @@ import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
 /** 
  * DAO for table "WECHAT_AUTHENTICATION_BEAN".
 */
-public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticationBean, String> {
+public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticationBean, Long> {
 
     public static final String TABLENAME = "WECHAT_AUTHENTICATION_BEAN";
 
@@ -24,12 +24,12 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Uid = new Property(0, String.class, "uid", true, "UID");
+        public final static Property Uid = new Property(0, String.class, "uid", false, "UID");
         public final static Property RedirectUrl = new Property(1, String.class, "redirectUrl", false, "REDIRECT_URL");
         public final static Property BaseUrl = new Property(2, String.class, "baseUrl", false, "BASE_URL");
         public final static Property Skey = new Property(3, String.class, "skey", false, "SKEY");
         public final static Property Sid = new Property(4, String.class, "sid", false, "SID");
-        public final static Property Uin = new Property(5, String.class, "uin", false, "UIN");
+        public final static Property Uin = new Property(5, long.class, "uin", true, "_id");
         public final static Property PassTicket = new Property(6, String.class, "passTicket", false, "PASS_TICKET");
         public final static Property Cookie = new Property(7, String.class, "cookie", false, "COOKIE");
         public final static Property BaseRequestStr = new Property(8, String.class, "baseRequestStr", false, "BASE_REQUEST_STR");
@@ -48,12 +48,12 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"WECHAT_AUTHENTICATION_BEAN\" (" + //
-                "\"UID\" TEXT PRIMARY KEY NOT NULL ," + // 0: uid
+                "\"UID\" TEXT," + // 0: uid
                 "\"REDIRECT_URL\" TEXT," + // 1: redirectUrl
                 "\"BASE_URL\" TEXT," + // 2: baseUrl
                 "\"SKEY\" TEXT," + // 3: skey
                 "\"SID\" TEXT," + // 4: sid
-                "\"UIN\" TEXT," + // 5: uin
+                "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 5: uin
                 "\"PASS_TICKET\" TEXT," + // 6: passTicket
                 "\"COOKIE\" TEXT," + // 7: cookie
                 "\"BASE_REQUEST_STR\" TEXT);"); // 8: baseRequestStr
@@ -93,11 +93,7 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
         if (sid != null) {
             stmt.bindString(5, sid);
         }
- 
-        String uin = entity.getUin();
-        if (uin != null) {
-            stmt.bindString(6, uin);
-        }
+        stmt.bindLong(6, entity.getUin());
  
         String passTicket = entity.getPassTicket();
         if (passTicket != null) {
@@ -143,11 +139,7 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
         if (sid != null) {
             stmt.bindString(5, sid);
         }
- 
-        String uin = entity.getUin();
-        if (uin != null) {
-            stmt.bindString(6, uin);
-        }
+        stmt.bindLong(6, entity.getUin());
  
         String passTicket = entity.getPassTicket();
         if (passTicket != null) {
@@ -166,8 +158,8 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
     }
 
     @Override
-    public String readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.getLong(offset + 5);
     }    
 
     @Override
@@ -178,7 +170,7 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // baseUrl
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // skey
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // sid
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // uin
+            cursor.getLong(offset + 5), // uin
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // passTicket
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // cookie
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // baseRequestStr
@@ -193,21 +185,22 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
         entity.setBaseUrl(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setSkey(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setSid(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setUin(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setUin(cursor.getLong(offset + 5));
         entity.setPassTicket(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setCookie(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setBaseRequestStr(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
      }
     
     @Override
-    protected final String updateKeyAfterInsert(WechatAuthenticationBean entity, long rowId) {
-        return entity.getUid();
+    protected final Long updateKeyAfterInsert(WechatAuthenticationBean entity, long rowId) {
+        entity.setUin(rowId);
+        return rowId;
     }
     
     @Override
-    public String getKey(WechatAuthenticationBean entity) {
+    public Long getKey(WechatAuthenticationBean entity) {
         if(entity != null) {
-            return entity.getUid();
+            return entity.getUin();
         } else {
             return null;
         }
@@ -215,7 +208,7 @@ public class WechatAuthenticationBeanDao extends AbstractDao<WechatAuthenticatio
 
     @Override
     public boolean hasKey(WechatAuthenticationBean entity) {
-        return entity.getUid() != null;
+        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
     }
 
     @Override

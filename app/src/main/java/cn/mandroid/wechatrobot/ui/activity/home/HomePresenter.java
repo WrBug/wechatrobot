@@ -12,10 +12,10 @@ import cn.mandroid.wechatrobot.utils.MLog;
  * Created by wrBug on 2017/1/1.
  */
 
-public class HomePresenter extends BasePresenter<HomeConstract.View> implements HomeConstract.Presenter {
+public class HomePresenter extends BasePresenter<HomeContract.View> implements HomeContract.Presenter {
     WechatAuthenticationRepository mWechatAuthenticationRepository;
 
-    public HomePresenter(HomeConstract.View view) {
+    public HomePresenter(HomeContract.View view) {
         super(view);
         mWechatAuthenticationRepository = Injection.getWechatAuthenticationRepository();
     }

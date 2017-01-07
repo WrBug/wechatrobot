@@ -193,7 +193,7 @@ public class WechatAuthenticationCloudSource extends BaseCloudSource implements 
                 String sid = getLoginData(s, "wxsid");
                 String uin = getLoginData(s, "wxuin");
                 String passTicket = getLoginData(s, "pass_ticket");
-                callback.onSuccess(skey, sid, uin, passTicket, baseRequestBean.getCookie());
+                callback.onSuccess(skey, sid, Long.parseLong(uin), passTicket, baseRequestBean.getCookie());
             }
         });
     }

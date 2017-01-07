@@ -2,8 +2,8 @@ package cn.mandroid.wechatrobot.model.repository;
 
 import java.util.Map;
 
+import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
-import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 
 /**
  * Created by wrBug on 2016/12/21.
@@ -107,11 +107,30 @@ public class WechatAuthenticationRepository {
     }
 
     /**
-     * 保存用户信息
+     * 获取登录信息
+     *
+     * @param uin
+     * @return
+     */
+    public WechatAuthenticationBean getWechatAuthInfo(long uin) {
+        return mWechatAuthenticationLocalSource.getWechatAuthInfo(uin);
+    }
+
+    /**
+     * 保存登录用户信息
      *
      * @param wechatUserBean
      */
-    public void saveWechatUser(WechatUserBean wechatUserBean) {
-        mWechatAuthenticationLocalSource.saveWechatUser(wechatUserBean);
+    public void saveLoginWechatUser(LoginWechatUser wechatUserBean) {
+        mWechatAuthenticationLocalSource.saveLoginWechatUser(wechatUserBean);
+    }
+
+    /**
+     * 获取已登录用户信息
+     *
+     * @return
+     */
+    public LoginWechatUser getLoginWechatUser() {
+        return mWechatAuthenticationLocalSource.getLoginWechatUser();
     }
 }

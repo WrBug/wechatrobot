@@ -7,7 +7,7 @@ import cn.mandroid.wechatrobot.ui.activity.common.IBaseView;
  * Created by wrBug on 2016/12/31.
  */
 
-public class HomeConstract {
+public class HomeContract {
     public interface View extends IBaseView {
 
     }

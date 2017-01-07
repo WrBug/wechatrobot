@@ -12,7 +12,10 @@ import cn.mandroid.wechatrobot.ui.activity.common.IBaseView;
 public class WechatLoginContract {
     public interface View extends IBaseView {
         void setQrcodeImage(String url);
+
         void setPcOpenNotice(String url);
+
+        void loginSuccess();
     }
 
     public interface Presenter extends IBasePresenter {

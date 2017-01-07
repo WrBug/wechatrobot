@@ -29,7 +29,7 @@ public interface IWechatAuthenticationCloudSource {
     }
 
     interface WechatLoginCallback extends BaseResponseCallback {
-        void onSuccess(String skey, String sid, String uin, String passTicket, String cookie);
+        void onSuccess(String skey, String sid, long uin, String passTicket, String cookie);
     }
 
     interface GetWechatUiDataCallback extends BaseResponseCallback {
