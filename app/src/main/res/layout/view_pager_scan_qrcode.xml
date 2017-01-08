@@ -33,7 +33,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:textColor="@color/lite_blue"
-        android:visibility="gone"
+        android:visibility="invisible"
         tools:text="@string/pc_open_qrcode_notice"
         tools:visibility="visible"/>
 </LinearLayout>

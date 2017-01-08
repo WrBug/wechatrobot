@@ -228,6 +228,13 @@ public class ImageLoader {
         private int scaleWidth = -1;
         private int scaleHeight = -1;
         private Bitmap mBitmap;
+        private boolean cropCircle;
+
+        @Override
+        public ImageHelper cropCircle(boolean cropCircle) {
+            this.cropCircle = cropCircle;
+            return this;
+        }
 
         @Override
         public void into(ImageView imageView) {
@@ -314,6 +321,9 @@ public class ImageLoader {
                     mBitmap.recycle();
                     mBitmap = bm;
                 }
+                if (cropCircle) {
+                    mBitmap = ImageUtil.makeRoundCorner(mBitmap);
+                }
                 if (!cache.containsKey(url)) {
                     cache.put(url, new SoftReference<>(mBitmap));
                 }
@@ -325,6 +335,7 @@ public class ImageLoader {
     }
 
     public interface ImageHelper {
+        ImageHelper cropCircle(boolean cropCircle);
 
         void into(ImageView imageView);
 

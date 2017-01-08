@@ -1,5 +1,7 @@
 package cn.mandroid.wechatrobot.ui.activity.home;
 
+import android.support.design.widget.CoordinatorLayout;
+
 import cn.mandroid.wechatrobot.model.common.Api;
 import cn.mandroid.wechatrobot.model.common.Injection;
 import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
@@ -53,8 +55,10 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         if (mWechatAuthenticationBean == null) {
             mView.enterLoginActivity();
         } else {
-            mView.setNickname(mUser.getNickName());
             Api.setCookie(mWechatAuthenticationBean.getCookie());
+            mView.setNickname(mUser.getNickName());
+            mView.setAvatarImage(mUser.getHeadImgUrl());
+            mView.test(mUser);
             getContactor();
         }
     }

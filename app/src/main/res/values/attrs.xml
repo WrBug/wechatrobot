@@ -4,4 +4,7 @@
         <attr name="roundCornerRadius" format="dimension"/>
         <attr name="defaultSrc" format="reference"/>
     </declare-styleable>
+    <declare-styleable name="FabOptions">
+        <attr name="button_menu" format="reference" type="menu" />
+    </declare-styleable>
 </resources>

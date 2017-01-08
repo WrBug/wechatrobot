@@ -5,18 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import butterknife.ButterKnife;
-import cn.mandroid.wechatrobot.BuildConfig;
+import cn.mandroid.wechatrobot.R;
 import cn.mandroid.wechatrobot.model.common.Api;
 import cn.mandroid.wechatrobot.ui.activity.wechatlogin.WechatLoginActivity;
 import cn.mandroid.wechatrobot.utils.MLog;
@@ -119,6 +118,10 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
         Api.cleanCookie();
         startActivity(new Intent(this, WechatLoginActivity.class));
         finish();
+    }
+
+    public void showToast(String msg, CoordinatorLayout coordinatorLayout) {
+        Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

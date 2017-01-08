@@ -9,6 +9,7 @@ import org.greenrobot.greendao.annotation.Transient;
 import java.util.List;
 
 import cn.mandroid.wechatrobot.model.entity.BaseBean;
+
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Unique;
 
@@ -55,14 +56,14 @@ public class WechatUserBean extends BaseBean {
 
     @Generated(hash = 1340278071)
     public WechatUserBean(String UserName, long WebWxPluginSwitch, long HeadImgFlag,
-            long Uin, String NickName, String HeadImgUrl, long ContactFlag,
-            long MemberCount, String RemarkName, long HideInputBarFlag, long Sex,
-            String Signature, long VerifyFlag, long OwnerUin, String PYInitial,
-            String PYQuanPin, String RemarkPYInitial, String RemarkPYQuanPin,
-            long StarFriend, long AppAccountFlag, long Statues, long AttrStatus,
-            String Province, String City, String Alias, long SnsFlag,
-            long UniFriend, String DisplayName, long ChatRoomId, String KeyWord,
-            String EncryChatRoomId) {
+                          long Uin, String NickName, String HeadImgUrl, long ContactFlag,
+                          long MemberCount, String RemarkName, long HideInputBarFlag, long Sex,
+                          String Signature, long VerifyFlag, long OwnerUin, String PYInitial,
+                          String PYQuanPin, String RemarkPYInitial, String RemarkPYQuanPin,
+                          long StarFriend, long AppAccountFlag, long Statues, long AttrStatus,
+                          String Province, String City, String Alias, long SnsFlag,
+                          long UniFriend, String DisplayName, long ChatRoomId, String KeyWord,
+                          String EncryChatRoomId) {
         this.UserName = UserName;
         this.WebWxPluginSwitch = WebWxPluginSwitch;
         this.HeadImgFlag = HeadImgFlag;
@@ -229,7 +230,7 @@ public class WechatUserBean extends BaseBean {
     }
 
     public String getHeadImgUrl() {
-        return HeadImgUrl;
+        return "https://wx.qq.com" + HeadImgUrl;
     }
 
     public void setHeadImgUrl(String HeadImgUrl) {
