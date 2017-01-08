@@ -1,5 +1,11 @@
 package cn.mandroid.wechatrobot.model.repository.wechatinfo;
 
+import java.util.List;
+import java.util.Map;
+
+import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
+import cn.mandroid.wechatrobot.model.entity.wechat.WechatSyncKeyBean;
+
 /**
  * Created by wrBug on 2017/1/8.
  */
@@ -25,5 +31,17 @@ public class WechatInfoRepository {
 
     public void getWechatContactors(String baseUrl, String passTicket, String skey, IWechatInfoCloudSource.GetContactorsCallback callback) {
         mWechatInfoCloudSource.getWechatContactors(baseUrl, passTicket, skey, callback);
+    }
+
+    public void saveWechatContactors(List<WechatUserBean> userBeens) {
+        mWechatInfoLocalSource.saveWechatContactors(userBeens);
+    }
+
+    public WechatUserBean getLocalWechatContactor(String username) {
+        return mWechatInfoLocalSource.getLocalWechatContactor(username);
+    }
+
+    public void wechatMessageLoop(String baseUrl, String sid, String skey, long uin, String syncKey, String passTicket, Map<String, String> baseRequest, WechatSyncKeyBean syncKeyBean, IWechatInfoCloudSource.WechatMessageLoopCallback callback) {
+        mWechatInfoCloudSource.wechatMessageLoop(baseUrl, sid, skey, uin, syncKey, passTicket, baseRequest, syncKeyBean, callback);
     }
 }

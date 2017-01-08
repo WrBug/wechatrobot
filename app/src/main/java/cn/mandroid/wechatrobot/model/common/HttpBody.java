@@ -74,6 +74,16 @@ public class HttpBody {
                     .subscribe(subscriber);
         }
 
+        /**
+         * 同步获取数据
+         *
+         * @param url
+         * @return
+         */
+        public String doGet(String url) {
+            return Api.doGet(url, this, false);
+        }
+
         public InputStream downloadAsInputStream(String url) {
             return Api.downloadAsInputStream(url, this);
         }

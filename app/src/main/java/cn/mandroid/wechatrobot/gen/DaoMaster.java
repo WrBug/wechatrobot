@@ -24,6 +24,7 @@ public class DaoMaster extends AbstractDaoMaster {
         LoginWechatUserDao.createTable(db, ifNotExists);
         UserDao.createTable(db, ifNotExists);
         WechatAuthenticationBeanDao.createTable(db, ifNotExists);
+        WechatMessageDao.createTable(db, ifNotExists);
         WechatUserBeanDao.createTable(db, ifNotExists);
     }
 
@@ -32,6 +33,7 @@ public class DaoMaster extends AbstractDaoMaster {
         LoginWechatUserDao.dropTable(db, ifExists);
         UserDao.dropTable(db, ifExists);
         WechatAuthenticationBeanDao.dropTable(db, ifExists);
+        WechatMessageDao.dropTable(db, ifExists);
         WechatUserBeanDao.dropTable(db, ifExists);
     }
 
@@ -54,6 +56,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(LoginWechatUserDao.class);
         registerDaoClass(UserDao.class);
         registerDaoClass(WechatAuthenticationBeanDao.class);
+        registerDaoClass(WechatMessageDao.class);
         registerDaoClass(WechatUserBeanDao.class);
     }
 

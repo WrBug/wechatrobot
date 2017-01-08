@@ -58,7 +58,6 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
             Api.setCookie(mWechatAuthenticationBean.getCookie());
             mView.setNickname(mUser.getNickName());
             mView.setAvatarImage(mUser.getHeadImgUrl());
-            mView.test(mUser);
             getContactor();
         }
     }
@@ -67,7 +66,11 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         mWechatInfoRepository.getWechatContactors(mWechatAuthenticationBean.getBaseUrl(), mWechatAuthenticationBean.getPassTicket(), mWechatAuthenticationBean.getSkey(), new IWechatInfoCloudSource.GetContactorsCallback() {
             @Override
             public void onSuccess(WechatContactVo wechatContactVo) {
-                MLog.i(wechatContactVo.toJson());
+                if (wechatContactVo.getMemberCount() > 0) {
+                    mWechatInfoRepository.saveWechatContactors(wechatContactVo.getMemberList());
+                }
+                mView.showToast("联系人列表获取成功");
+                mView.contactorsLoadFinished(mWechatAuthenticationBean);
             }
 
             @Override

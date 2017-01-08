@@ -16,7 +16,6 @@
         <activity android:name=".ui.activity.home.HomeActivity">
         </activity>
         <activity android:name=".ui.activity.wechatlogin.WechatLoginActivity">
-
         </activity>
         <activity android:name=".ui.activity.welcome.WelcomeActivity">
             <intent-filter>
@@ -25,6 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".ui.service.NewWechatMessageListenerLoopService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

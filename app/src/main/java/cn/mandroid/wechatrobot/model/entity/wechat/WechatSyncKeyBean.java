@@ -1,6 +1,8 @@
 package cn.mandroid.wechatrobot.model.entity.wechat;
 
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.mandroid.wechatrobot.model.entity.BaseBean;
@@ -16,7 +18,7 @@ public class WechatSyncKeyBean extends BaseBean {
      */
 
     private int Count;
-    private List<ListBean> List;
+    private ArrayList<ListBean> List;
 
     public int getCount() {
         return Count;
@@ -30,11 +32,11 @@ public class WechatSyncKeyBean extends BaseBean {
         return List;
     }
 
-    public void setList(List<ListBean> List) {
+    public void setList(ArrayList<ListBean> List) {
         this.List = List;
     }
 
-    public static class ListBean {
+    public static class ListBean implements Serializable {
         /**
          * Key : 1
          * Val : 662998350

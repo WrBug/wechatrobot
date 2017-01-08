@@ -83,6 +83,16 @@ public class Api {
         });
     }
 
+    public static String doGet(final String url, @Nullable final HttpBody.Query map, final boolean getSetCookie) {
+        ResponseBody body = getResponseBody(url, map, getSetCookie);
+        try {
+            return body.string();
+        } catch (IOException e) {
+            MLog.e(e);
+        }
+        return "";
+    }
+
     public static Observable<File> getFile(final String url, final HttpBody.Query params) {
         return Observable.create(new Observable.OnSubscribe<File>() {
             @Override

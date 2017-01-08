@@ -14,13 +14,14 @@ import java.util.Map;
 
 import org.greenrobot.greendao.annotation.Generated;
 
+import cn.mandroid.wechatrobot.model.entity.BaseBean;
 import cn.mandroid.wechatrobot.model.entity.wechat.WechatSyncKeyBean;
 
 /**
  * Created by wrBug on 2017/1/1.
  */
 @Entity
-public class WechatAuthenticationBean {
+public class WechatAuthenticationBean extends BaseBean {
     private String uid;
     private String redirectUrl;
     private String baseUrl;
@@ -102,7 +103,7 @@ public class WechatAuthenticationBean {
         this.syncKeyJson = syncKey.toJson();
     }
 
-    private String createDeviceId() {
+    public static String createDeviceId() {
         return "e" + (long) (System.currentTimeMillis() * 100l + Math.random() * 100l);
     }
 

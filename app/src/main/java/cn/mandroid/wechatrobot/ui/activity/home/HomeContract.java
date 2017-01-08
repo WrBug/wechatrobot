@@ -1,5 +1,6 @@
 package cn.mandroid.wechatrobot.ui.activity.home;
 
+import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 import cn.mandroid.wechatrobot.ui.activity.common.IBasePresenter;
 import cn.mandroid.wechatrobot.ui.activity.common.IBaseView;
@@ -12,9 +13,9 @@ public class HomeContract {
     public interface View extends IBaseView {
         void setNickname(String nickname);
 
-        void test(WechatUserBean userBean);
-
         void setAvatarImage(String url);
+
+        void contactorsLoadFinished(WechatAuthenticationBean bean);
     }
 
     public interface Presenter extends IBasePresenter {

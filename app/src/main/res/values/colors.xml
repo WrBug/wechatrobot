@@ -10,4 +10,10 @@
     <color name="trans50white">#7fffffff</color>
     <color name="trans30white">#4cffffff</color>
     <color name="trans10white">#19ffffff</color>
+    <color name="trans90black">#e5000000</color>
+    <color name="trans80black">#cc000000</color>
+    <color name="trans70black">#b2000000</color>
+    <color name="trans50black">#7f000000</color>
+    <color name="trans30black">#4c000000</color>
+    <color name="trans10black">#19000000</color>
 </resources>

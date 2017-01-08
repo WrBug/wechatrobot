@@ -10,4 +10,8 @@ public interface IChatBubble {
     void setMessage(String msg);
 
     void setUser(WechatUserBean user);
+
+    void setNickname(String nickname);
+
+    void setAvatar(String url);
 }

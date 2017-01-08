@@ -8,17 +8,25 @@
     android:layout_height="match_parent"
     tools:context="cn.mandroid.wechatrobot.ui.activity.home.HomeActivity">
 
-    <include
-        layout="@layout/layout_toolbar"/>
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <include
+            layout="@layout/layout_toolbar"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+    </android.support.design.widget.AppBarLayout>
+
+    <cn.mandroid.wechatrobot.ui.widget.chatview.ChatView
+        android:id="@+id/chatView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <cn.mandroid.wechatrobot.ui.widget.faboptions.FabOptions
         android:id="@+id/floatMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"/>
-
-    <cn.mandroid.wechatrobot.ui.widget.chatview.LeftChatBubble
-        android:id="@+id/chat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 </android.support.design.widget.CoordinatorLayout>
