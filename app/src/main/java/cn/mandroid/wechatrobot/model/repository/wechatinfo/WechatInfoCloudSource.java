@@ -2,6 +2,7 @@ package cn.mandroid.wechatrobot.model.repository.wechatinfo;
 
 import android.text.TextUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,6 +12,7 @@ import cn.mandroid.wechatrobot.model.common.HttpBody;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
 import cn.mandroid.wechatrobot.model.entity.wechat.WechatContactVo;
 import cn.mandroid.wechatrobot.model.entity.wechat.WechatSyncKeyBean;
+import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.SendMsgVo;
 import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.WechatMessageBean;
 import cn.mandroid.wechatrobot.utils.MLog;
 import cn.mandroid.wechatrobot.utils.RegexUtil;
@@ -96,6 +98,58 @@ public class WechatInfoCloudSource extends BaseCloudSource implements IWechatInf
                 callback.onAuthFailed();
             }
         }
+    }
+
+    /**
+     * 发送文本消息
+     *
+     * @param fromUser
+     * @param toUser
+     * @param msg
+     * @param passTicket
+     * @param baseRequest
+     * @param callback
+     */
+    @Override
+    public void sendWechatTextMessage(String fromUser, String toUser, String msg, String passTicket, Map<String, String> baseRequest, final SendMessageCallback callback) {
+        String url = "https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxsendmsg?pass_ticket=" + passTicket;
+        Map<String, Object> map = new HashMap<>();
+        long time = System.currentTimeMillis();
+        map.put("Type", "1");
+        map.put("Content", msg);
+        map.put("FromUserName", fromUser);
+        map.put("ClientMsgId", time + "");
+        map.put("LocalID", time + "");
+        map.put("ToUserName", toUser);
+        postRequestBuilder().addParameter("BaseRequest", baseRequest)
+                .addParameter("Msg", map)
+                .addParameter("Scene", 0)
+                .doOtherApiPost(url, new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        MLog.e(e);
+                        callback.onError();
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        if (!TextUtils.isEmpty(s)) {
+                            SendMsgVo vo = mGson.fromJson(s, SendMsgVo.class);
+                            if (vo!=null&&vo.getBaseResponse().isSuccess()) {
+                                callback.onSuccess();
+                            }else {
+                                callback.onError();
+                            }
+                        } else {
+                            callback.onError();
+                        }
+                    }
+                });
     }
 
     private void messageSync(String baseUrl, String sid, String skey, String passTicket, Map<String, String> baseRequest, WechatSyncKeyBean syncKeyBean, final WechatMessageLoopCallback callback) {

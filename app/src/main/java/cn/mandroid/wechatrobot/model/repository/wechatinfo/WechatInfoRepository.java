@@ -53,4 +53,8 @@ public class WechatInfoRepository {
     public List<WechatMessage> getWechatMessages(long uin) {
         return mWechatInfoLocalSource.getWechatMessages(uin);
     }
+
+    public void sendWechatTextMessage(String fromUser, String toUser, String msg, String passTicket, Map<String, String> baseRequest, IWechatInfoCloudSource.SendMessageCallback callback) {
+        mWechatInfoCloudSource.sendWechatTextMessage(fromUser, toUser, msg, passTicket, baseRequest, callback);
+    }
 }

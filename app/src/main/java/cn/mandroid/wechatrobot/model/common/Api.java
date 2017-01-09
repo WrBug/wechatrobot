@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.mandroid.wechatrobot.WechatRobotApp;
 import cn.mandroid.wechatrobot.model.entity.BaseRequestBean;
+import cn.mandroid.wechatrobot.utils.Constant;
 import cn.mandroid.wechatrobot.utils.DeviceUtil;
 import cn.mandroid.wechatrobot.utils.FileUtil;
 import cn.mandroid.wechatrobot.utils.MLog;
@@ -118,7 +119,7 @@ public class Api {
         String params = query.getParams();
         final String finalUrl = url + params;
         try {
-            Request request = new Request.Builder().url(finalUrl).addHeader("Cookie", sCookie).build();
+            Request request = new Request.Builder().url(finalUrl).addHeader("Cookie", sCookie).addHeader("apikey", Constant.BAIDU_APPKEY).build();
             Call call = mClinet.newCall(request);
             Response response = call.execute();
             if (getSetCookie) {

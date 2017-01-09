@@ -22,8 +22,14 @@ public interface IWechatInfoCloudSource {
         void onSuccess(WechatMessageBean vo);
 
         void onEmpty();
+
         void onNoNewMessage();
+
         void onAuthFailed();
+    }
+
+    interface SendMessageCallback extends BaseResponseCallback {
+        void onSuccess();
     }
 
     /**
@@ -46,4 +52,16 @@ public interface IWechatInfoCloudSource {
      * @param callback
      */
     void wechatMessageLoop(String baseUrl, String sid, String skey, long uin, String syncKey, String passTicket, Map<String, String> baseRequest, WechatSyncKeyBean syncKeyBean, WechatMessageLoopCallback callback);
+
+    /**
+     * 发送文本消息
+     *
+     * @param fromUser
+     * @param toUser
+     * @param msg
+     * @param passTicket
+     * @param baseRequest
+     * @param callback
+     */
+    void sendWechatTextMessage(String fromUser, String toUser, String msg, String passTicket, Map<String, String> baseRequest, SendMessageCallback callback);
 }

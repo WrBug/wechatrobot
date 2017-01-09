@@ -1,5 +1,6 @@
 package cn.mandroid.wechatrobot.ui.widget.chatview;
 
+import cn.mandroid.wechatrobot.model.entity.dao.WechatMessage;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 
 /**
@@ -7,7 +8,7 @@ import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
  */
 
 public interface IChatBubble {
-    void setMessage(String msg);
+    void setMessage(WechatMessage msg);
 
     void setUser(WechatUserBean user);
 

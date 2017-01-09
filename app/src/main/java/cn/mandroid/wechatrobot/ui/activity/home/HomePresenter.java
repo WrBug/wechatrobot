@@ -9,8 +9,11 @@ import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatMessage;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
+import cn.mandroid.wechatrobot.model.entity.turing.TuringRespBean;
 import cn.mandroid.wechatrobot.model.entity.wechat.WechatContactVo;
 import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.WechatMessageBean;
+import cn.mandroid.wechatrobot.model.repository.turingrobot.ITuringCloudSource;
+import cn.mandroid.wechatrobot.model.repository.turingrobot.TuringRepostory;
 import cn.mandroid.wechatrobot.model.repository.wechatauth.WechatAuthenticationRepository;
 import cn.mandroid.wechatrobot.model.repository.wechatinfo.IWechatInfoCloudSource;
 import cn.mandroid.wechatrobot.model.repository.wechatinfo.WechatInfoRepository;
@@ -25,11 +28,13 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
     private WechatInfoRepository mWechatInfoRepository;
     private WechatUserBean mUser;
     private WechatAuthenticationBean mWechatAuthenticationBean;
+    private TuringRepostory mTuringRepostory;
 
     public HomePresenter(HomeContract.View view) {
         super(view);
         mWechatAuthenticationRepository = Injection.getWechatAuthenticationRepository();
         mWechatInfoRepository = Injection.getWechatInfoRepository();
+        mTuringRepostory = Injection.getTuringRepostory();
     }
 
     @Override
@@ -59,12 +64,45 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         for (int i = 0; i < messageBean.getAddMsgList().size(); i++) {
             wechatMessages.get(i).setUin(mWechatAuthenticationBean.getUin());
             wechatMessages.get(i).setIsFromMine(wechatMessages.get(i).getFromUserName().equals(mUser.getUserName()));
-            if (wechatMessages.get(i).getMsgType() == 51||wechatMessages.get(i).isGroupMessage()) {
+            if (wechatMessages.get(i).getMsgType() == 51 || wechatMessages.get(i).isGroupMessage()) {
                 cache.remove(wechatMessages.get(i));
             }
         }
         mWechatInfoRepository.saveWechatMessages(wechatMessages);
         mView.showWechatMessage(cache);
+    }
+
+    @Override
+    public void getTuringResp(WechatMessageBean wechatMessage) {
+        if (wechatMessage.getAddMsgCount() != 1) {
+            return;
+        }
+        final WechatMessage message = wechatMessage.getAddMsgList().get(0);
+        if (message.getMsgType() == WechatMessage.TEXT) {
+            mTuringRepostory.getTuringResp(message.getFromUserName(), message.getContent(), new ITuringCloudSource.GetTuringRespCallback() {
+                @Override
+                public void onSuccess(TuringRespBean turingRespBean) {
+                    String text = turingRespBean.getShowtext();
+                    sendTextMessage(text, message.getFromUserName());
+                }
+            });
+        }
+
+    }
+
+    private void sendTextMessage(String msg, String toUser) {
+        msg += "\n[滔哥机器人自动回复]";
+        mWechatInfoRepository.sendWechatTextMessage(mUser.getUserName(), toUser, msg, mWechatAuthenticationBean.getPassTicket(), mWechatAuthenticationBean.getBaseRequest(), new IWechatInfoCloudSource.SendMessageCallback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     private void getWechatAuthInfo(long uin) {

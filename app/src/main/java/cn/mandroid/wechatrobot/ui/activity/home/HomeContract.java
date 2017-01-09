@@ -30,5 +30,7 @@ public class HomeContract {
         void loadUserInfo();
 
         void saveMessages(WechatMessageBean messageBean);
+
+        void getTuringResp(WechatMessageBean wechatMessage);
     }
 }

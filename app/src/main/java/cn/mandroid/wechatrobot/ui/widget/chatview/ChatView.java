@@ -28,6 +28,7 @@ import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.WechatMessageBe
 public class ChatView extends RecyclerView {
     ChatViewAdapter mAdapter;
     private static Map<String, WechatUserBean> sWechatUserMap = new HashMap<>();
+    LinearLayoutManager mLinearLayoutManager;
 
     public ChatView(Context context) {
         this(context, null);
@@ -39,20 +40,26 @@ public class ChatView extends RecyclerView {
 
     public ChatView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setLayoutManager(new LinearLayoutManager(context));
+        mLinearLayoutManager = new LinearLayoutManager(context);
+        setLayoutManager(mLinearLayoutManager);
     }
 
     public void setHistoryMessage(List<WechatMessage> wechatMessages) {
         mAdapter = new ChatViewAdapter(getContext(), wechatMessages);
         setAdapter(mAdapter);
+        smoothScrollToPosition(mAdapter.getItemCount());
     }
 
     public void addMessage(WechatMessage... wechatMessages) {
         mAdapter.addMessage(wechatMessages);
+        smoothScrollToPosition(mAdapter.getItemCount());
+
     }
 
     public void addMessage(List<WechatMessage> wechatMessages) {
         mAdapter.addMessage(wechatMessages);
+        smoothScrollToPosition(mAdapter.getItemCount());
+
     }
 
     private static class ChatViewAdapter extends Adapter<ChatViewAdapter.ChatViewHolder> {
@@ -126,12 +133,12 @@ public class ChatView extends RecyclerView {
             WechatMessage message = mWechatMessages.get(position);
             if (sWechatUserMap.containsKey(message.getFromUserName())) {
                 WechatUserBean wechatUserBean = sWechatUserMap.get(message.getFromUserName());
-                holder.setData(wechatUserBean.getHeadImgUrl(), wechatUserBean.getNickName(), message.getContent());
+                holder.setData(wechatUserBean.getHeadImgUrl(), wechatUserBean.getNickName(), message);
             } else {
                 WechatUserBean wechatUserBean = Injection.getWechatInfoRepository().getLocalWechatContactor(message.getFromUserName());
                 if (wechatUserBean != null) {
                     sWechatUserMap.put(message.getFromUserName(), wechatUserBean);
-                    holder.setData(wechatUserBean.getHeadImgUrl(), wechatUserBean.getNickName(), message.getContent());
+                    holder.setData(wechatUserBean.getHeadImgUrl(), wechatUserBean.getNickName(), message);
                 }
             }
         }
@@ -144,7 +151,7 @@ public class ChatView extends RecyclerView {
                 mChatBubble = itemView;
             }
 
-            public void setData(String url, String nickname, String msg) {
+            public void setData(String url, String nickname, WechatMessage msg) {
                 mChatBubble.setAvatar(url);
                 mChatBubble.setNickname(nickname);
                 mChatBubble.setMessage(msg);

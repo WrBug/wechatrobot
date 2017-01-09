@@ -38,6 +38,7 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
     private WechatAuthenticationBean mWechatAuthenticationBean;
     private NewMessageReceiver mNewMessageReceiver;
     private boolean isServiceStarted;
+    private boolean isRobotStart;
 
     @Override
     protected int setContentView() {
@@ -59,12 +60,21 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
                         showOpenMsgListennerDialog();
                         break;
                     }
+                    case R.id.robotMenu: {
+                        toggleRobot();
+                        break;
+                    }
                 }
             }
         });
         mChatView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == 1) {
+                    mFloatMenu.hide();
+                } else if (newState == 0) {
+                    mFloatMenu.show();
+                }
                 super.onScrollStateChanged(recyclerView, newState);
             }
 
@@ -73,6 +83,20 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+    }
+
+    private void toggleRobot() {
+        if (isServiceStarted) {
+            if (!isRobotStart) {
+                isRobotStart = true;
+                showToast("聊天机器人已启动");
+            } else {
+                isRobotStart = false;
+                showToast("聊天机器人已关闭");
+            }
+        } else {
+            showToast("请先开启消息监听");
+        }
     }
 
     private void initReceiver() {
@@ -205,6 +229,9 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
     @Override
     public void onNewMessage(WechatMessageBean vo) {
         mPersenter.saveMessages(vo);
+        if (isRobotStart) {
+            mPersenter.getTuringResp(vo);
+        }
     }
 
     @Override

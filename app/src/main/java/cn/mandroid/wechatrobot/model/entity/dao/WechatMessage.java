@@ -28,7 +28,20 @@ public class WechatMessage extends BaseBean {
     private boolean isFromMine;
     private String FromUserName;
     private String ToUserName;
+    /*
+    1 文本消息
+    3 图片  url=https://wx2.qq.com/cgi-bin/mmwebwx-bin/webwxgetmsgimg?MsgID=922464745910897364&skey
+    34 语音 url=https://wx2.qq.com/cgi-bin/mmwebwx-bin/webwxgetvoice?msgid=6415352730368466077&skey=@crypt_e854c950_167aa6d7dc19d197a9b20c4850ee632f
+    47 微信小游戏 表情包 系统表情包
+
+     */
     private long MsgType;
+    public final static int TEXT = 1;
+    public final static int PHOTO = 3;
+    public final static int VOICE = 34;
+    public final static int BIAO_QING_BAO = 47;
+
+
     private String Content;
     private long Status;
     private long ImgStatus;
@@ -366,5 +379,4 @@ public class WechatMessage extends BaseBean {
     public void setSubMsgType(long SubMsgType) {
         this.SubMsgType = SubMsgType;
     }
-
 }

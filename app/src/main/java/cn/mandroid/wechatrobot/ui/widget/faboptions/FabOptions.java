@@ -84,6 +84,17 @@ public class FabOptions extends FrameLayout implements View.OnClickListener, IIm
         close();
     }
 
+    public void hide() {
+        mFab.hide();
+        if (isOpen()) {
+            close();
+        }
+    }
+
+    public void show() {
+        mFab.show();
+    }
+
     private void initViews(Context context) {
         inflate(context, R.layout.faboptions_layout, this);
         mIsOpen = false;
