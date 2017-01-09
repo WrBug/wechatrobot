@@ -18,6 +18,7 @@
             app:layout_scrollFlags="scroll|enterAlways"/>
     </android.support.design.widget.AppBarLayout>
 
+
     <cn.mandroid.wechatrobot.ui.widget.chatview.ChatView
         android:id="@+id/chatView"
         android:layout_width="match_parent"
@@ -28,5 +29,5 @@
         android:id="@+id/floatMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"/>
+        android:layout_gravity="bottom|center"/>
 </android.support.design.widget.CoordinatorLayout>

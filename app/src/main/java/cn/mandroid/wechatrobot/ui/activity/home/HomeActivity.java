@@ -2,7 +2,7 @@ package cn.mandroid.wechatrobot.ui.activity.home;
 
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,7 +62,17 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
                 }
             }
         });
+        mChatView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
 
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
     private void initReceiver() {
