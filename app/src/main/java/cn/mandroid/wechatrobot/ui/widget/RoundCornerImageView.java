@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.support.annotation.DrawableRes;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -18,10 +19,11 @@ import cn.mandroid.wechatrobot.R;
  * @author wrbug
  * @since 2016/12/12
  */
-public class RoundCornerImageView extends ImageView {
+public class RoundCornerImageView extends AppCompatImageView {
     private TypedArray mTypedArray;
     private int defaultSrcId;
-    private float roundCornerRadius;
+    private float roundCornerRadiusX;
+    private float roundCornerRadiusY;
 
     public RoundCornerImageView(Context context) {
         this(context, null);
@@ -41,7 +43,8 @@ public class RoundCornerImageView extends ImageView {
             return;
         }
         mTypedArray = getContext().obtainStyledAttributes(attrs, R.styleable.RoundCornerImageView);
-        roundCornerRadius = mTypedArray.getDimension(R.styleable.RoundCornerImageView_roundCornerRadius, 0);
+        roundCornerRadiusX = mTypedArray.getDimension(R.styleable.RoundCornerImageView_roundCornerRadius, 0);
+        roundCornerRadiusY = roundCornerRadiusX;
         defaultSrcId = mTypedArray.getResourceId(R.styleable.RoundCornerImageView_defaultSrc, 0);
         mTypedArray.recycle();
         setImageResource(defaultSrcId);
@@ -70,8 +73,16 @@ public class RoundCornerImageView extends ImageView {
     }
 
     public void setRoundCornerRadius(float roundCornerRadius) {
-        this.roundCornerRadius = roundCornerRadius;
+        this.roundCornerRadiusX = roundCornerRadius;
+        roundCornerRadiusY = roundCornerRadiusX;
         invalidate();
+    }
+
+    public void setCircle() {
+        int w = this.getWidth();
+        int h = this.getHeight();
+        roundCornerRadiusX = w / 2;
+        roundCornerRadiusY = h / 2;
     }
 
     @Override
@@ -79,7 +90,7 @@ public class RoundCornerImageView extends ImageView {
         Path clipPath = new Path();
         int w = this.getWidth();
         int h = this.getHeight();
-        clipPath.addRoundRect(new RectF(0, 0, w, h), roundCornerRadius, roundCornerRadius, Path.Direction.CW);
+        clipPath.addRoundRect(new RectF(0, 0, w, h), roundCornerRadiusX, roundCornerRadiusY, Path.Direction.CW);
         canvas.clipPath(clipPath);
         super.onDraw(canvas);
     }

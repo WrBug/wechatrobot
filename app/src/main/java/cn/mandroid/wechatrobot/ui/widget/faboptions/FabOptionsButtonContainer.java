@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import cn.mandroid.wechatrobot.R;
+import cn.mandroid.wechatrobot.ui.widget.RoundCornerImageView;
 
 /**
  * Custom FabOptions buttons ({@link ImageView}) container, enables runtime view insertion
@@ -45,14 +46,13 @@ public class FabOptionsButtonContainer extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    public AppCompatImageView addButton(Context context, int buttonId, CharSequence title, Drawable drawableIcon) {
+    public RoundCornerImageView addButton(Context context, int buttonId, CharSequence title, Drawable drawableIcon) {
         return addButton(context, buttonId, title, drawableIcon, null);
     }
 
-    public AppCompatImageView addButton(Context context, int buttonId, CharSequence title, Drawable drawableIcon, Integer index) {
-        AppCompatImageView fabOptionButton =
-                (AppCompatImageView) LayoutInflater.from(context).inflate(R.layout.faboptions_button, this, false);
-
+    public RoundCornerImageView addButton(Context context, int buttonId, CharSequence title, Drawable drawableIcon, Integer index) {
+        RoundCornerImageView fabOptionButton =
+                (RoundCornerImageView) LayoutInflater.from(context).inflate(R.layout.faboptions_button, this, false);
         fabOptionButton.setImageDrawable(drawableIcon);
         fabOptionButton.setContentDescription(title);
         fabOptionButton.setId(buttonId);

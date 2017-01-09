@@ -18,10 +18,10 @@ import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.WechatMessageBe
 import cn.mandroid.wechatrobot.ui.activity.common.BaseActivity;
 import cn.mandroid.wechatrobot.ui.broadcastreceiver.NewMessageReceiver;
 import cn.mandroid.wechatrobot.ui.service.NewWechatMessageListenerLoopService;
+import cn.mandroid.wechatrobot.ui.widget.RoundCornerImageView;
 import cn.mandroid.wechatrobot.ui.widget.chatview.ChatView;
 import cn.mandroid.wechatrobot.ui.widget.faboptions.FabOptions;
 import cn.mandroid.wechatrobot.utils.ImageLoader;
-import cn.mandroid.wechatrobot.utils.MLog;
 import me.drakeet.materialdialog.MaterialDialog;
 
 public class HomeActivity extends BaseActivity<HomeContract.Presenter> implements HomeContract.View, NewMessageReceiver.OnNewMessageListener {
@@ -33,10 +33,11 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
     ChatView mChatView;
     @BindView(R.id.floatMenu)
     FabOptions mFloatMenu;
-    AppCompatImageView avatar;
+    RoundCornerImageView avatar;
     private boolean contactorsLoadFinished;
     private WechatAuthenticationBean mWechatAuthenticationBean;
     private NewMessageReceiver mNewMessageReceiver;
+    private boolean isServiceStarted;
 
     @Override
     protected int setContentView() {
@@ -48,6 +49,7 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
         setSupportActionBar(mToolBar);
         mFloatMenu.setButtonsMenu(this, R.menu.menu_home_bottom);
         avatar = mFloatMenu.getChild(0);
+        avatar.setRoundCornerRadius(20);
         mPersenter.loadUserInfo();
         mFloatMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +72,7 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
 
     @Override
     protected void onDestroy() {
-        if (mNewMessageReceiver!=null) {
+        if (mNewMessageReceiver != null) {
             mNewMessageReceiver.removeNewMessageListener(this);
             unregisterReceiver(mNewMessageReceiver);
         }
@@ -113,11 +115,15 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
             return;
         } else {
             final MaterialDialog dialog = new MaterialDialog(mContext);
-            dialog.setTitle("开启消息监听").setMessage("是否开启消息监听？开启后应用会获取您的微信消息。")
-                    .setPositiveButton("开启", new View.OnClickListener() {
+            dialog.setTitle(isServiceStarted ? "关闭消息监听" : "开启消息监听").setMessage(isServiceStarted ? "是否关闭消息监听？关闭后应用无法进行工作" : "是否开启消息监听？开启后应用会获取您的微信消息。")
+                    .setPositiveButton(isServiceStarted ? "关闭" : "开启", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            NewWechatMessageListenerLoopService.start(mContext, mWechatAuthenticationBean);
+                            if (isServiceStarted) {
+                                NewWechatMessageListenerLoopService.stop(mContext);
+                            } else {
+                                NewWechatMessageListenerLoopService.start(mContext, mWechatAuthenticationBean);
+                            }
                             dialog.dismiss();
                         }
                     })
@@ -166,7 +172,7 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
 
     @Override
     public void setAvatarImage(final String url) {
-        ImageLoader.load(url).cropCircle(true).into(avatar);
+        ImageLoader.load(url).into(avatar);
     }
 
     @Override
@@ -194,5 +200,17 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
     @Override
     public void onAuthFalid() {
         enterLoginActivity();
+    }
+
+    @Override
+    public void onServiceStarted() {
+        isServiceStarted = true;
+        setActionBarSubTitle("正在监听消息");
+    }
+
+    @Override
+    public void onServiceStoped() {
+        isServiceStarted = false;
+        setActionBarSubTitle("已停止消息监听");
     }
 }

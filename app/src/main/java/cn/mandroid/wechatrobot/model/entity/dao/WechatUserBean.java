@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Index;
+import org.greenrobot.greendao.annotation.OrderBy;
 import org.greenrobot.greendao.annotation.Transient;
 
 import java.util.List;
@@ -35,6 +37,7 @@ public class WechatUserBean extends BaseBean {
     private long VerifyFlag;
     private long OwnerUin;
     private String PYInitial;
+    @OrderBy
     private String PYQuanPin;
     private String RemarkPYInitial;
     private String RemarkPYQuanPin;

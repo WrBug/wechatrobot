@@ -15,10 +15,11 @@
   ~ limitations under the License.
   -->
 
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.mandroid.wechatrobot.ui.widget.RoundCornerImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/faboptions_icon_size"
     android:layout_height="@dimen/faboptions_icon_size"
-    android:layout_margin="@dimen/faboptions_button_padding"
     android:layout_gravity="center"
+    android:layout_margin="@dimen/faboptions_button_padding"
     android:clickable="true"
-    android:foreground="?attr/selectableItemBackgroundBorderless" />
+    android:foreground="?attr/selectableItemBackgroundBorderless"/>

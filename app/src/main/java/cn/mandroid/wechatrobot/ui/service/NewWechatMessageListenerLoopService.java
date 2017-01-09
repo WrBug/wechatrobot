@@ -57,11 +57,22 @@ public class NewWechatMessageListenerLoopService extends IntentService {
         context.startService(intent);
     }
 
+    public static void stop(Context context) {
+        Intent intent = new Intent(context, NewWechatMessageListenerLoopService.class);
+        context.stopService(intent);
+    }
+
     @Override
     public void onDestroy() {
         mExecutorService.shutdown();
         MLog.i("服务已停止");
+        sendStoped();
         super.onDestroy();
+    }
+
+    private void sendStoped() {
+        Intent intent = new Intent(NewMessageReceiver.ACTION_SERVICE_STOPED);
+        sendBroadcast(intent);
     }
 
     private void sendAuthFailed() {
@@ -70,26 +81,36 @@ public class NewWechatMessageListenerLoopService extends IntentService {
         stopSelf();
     }
 
+    private void sendStarted() {
+        Intent intent = new Intent(NewMessageReceiver.ACTION_SERVICE_STARTED);
+        sendBroadcast(intent);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         MLog.i("服务已启动");
+        sendStarted();
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_MESSAGE_LOOP.equals(action)) {
                 mWechatAuthenticationBean = (WechatAuthenticationBean) intent.getSerializableExtra(WECHAT_AUTHENTICATION_BEAN);
-                mExecutorService.execute(handleActionMessageLoop());
+                handleActionMessageLoop();
+                while (true) ;
             }
         }
-        while (true) ;
     }
 
-    private Runnable handleActionMessageLoop() {
-        return new Runnable() {
+
+    private void handleActionMessageLoop() {
+        if (mExecutorService.isShutdown()) {
+            return;
+        }
+        mExecutorService.submit(new Runnable() {
             @Override
             public void run() {
                 wechatMessageLoop(mWechatAuthenticationBean.getBaseUrl(), mWechatAuthenticationBean.getSid(), mWechatAuthenticationBean.getSkey(), mWechatAuthenticationBean.getUin(), mWechatAuthenticationBean.getSyncKey(), mWechatAuthenticationBean.getPassTicket(), mWechatAuthenticationBean.getBaseRequest(), mWechatAuthenticationBean.getWechatSyncKeyBean());
             }
-        };
+        });
     }
 
     private void wechatMessageLoop(String baseUrl, String sid, String skey, long uin, String syncKey, String passTicket, Map<String, String> baseRequest, WechatSyncKeyBean syncKeyBean) {
@@ -108,7 +129,7 @@ public class NewWechatMessageListenerLoopService extends IntentService {
                         sendBroadcast(intent);
                     }
                 }
-                mExecutorService.execute(handleActionMessageLoop());
+                handleActionMessageLoop();
             }
 
             @Override
@@ -117,14 +138,14 @@ public class NewWechatMessageListenerLoopService extends IntentService {
                 if (emptyMessageCount >= 10) {
                     sendAuthFailed();
                 } else {
-                    mExecutorService.execute(handleActionMessageLoop());
+                    handleActionMessageLoop();
                 }
             }
 
             @Override
             public void onNoNewMessage() {
                 emptyMessageCount = 0;
-                mExecutorService.execute(handleActionMessageLoop());
+                handleActionMessageLoop();
             }
 
             @Override

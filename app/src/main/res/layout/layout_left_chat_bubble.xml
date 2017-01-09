@@ -4,7 +4,8 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="horizontal">
+              android:orientation="horizontal"
+              android:paddingBottom="20dp">
 
     <cn.mandroid.wechatrobot.ui.widget.RoundCornerImageView
         android:id="@+id/avatarIv"
@@ -19,7 +20,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="50dp"
+        android:layout_marginRight="90dp"
         android:orientation="vertical"
         android:padding="3dp">
 

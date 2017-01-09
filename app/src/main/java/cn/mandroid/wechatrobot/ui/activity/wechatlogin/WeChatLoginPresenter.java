@@ -1,5 +1,7 @@
 package cn.mandroid.wechatrobot.ui.activity.wechatlogin;
 
+import java.util.Arrays;
+
 import cn.mandroid.wechatrobot.R;
 import cn.mandroid.wechatrobot.model.common.Injection;
 import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
@@ -8,6 +10,7 @@ import cn.mandroid.wechatrobot.model.entity.wechat.WechatSyncKeyBean;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 import cn.mandroid.wechatrobot.model.repository.wechatauth.IWechatAuthenticationCloudSource;
 import cn.mandroid.wechatrobot.model.repository.wechatauth.WechatAuthenticationRepository;
+import cn.mandroid.wechatrobot.model.repository.wechatinfo.WechatInfoRepository;
 import cn.mandroid.wechatrobot.ui.activity.common.BasePresenter;
 
 /**
@@ -16,11 +19,13 @@ import cn.mandroid.wechatrobot.ui.activity.common.BasePresenter;
 
 public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View> implements WechatLoginContract.Presenter {
     WechatAuthenticationRepository mWechatAuthenticationRepository;
+    WechatInfoRepository mWechatInfoRepository;
     WechatAuthenticationBean mWechatAuthenticationBean;
 
     public WeChatLoginPresenter(WechatLoginContract.View view) {
         super(view);
         mWechatAuthenticationRepository = Injection.getWechatAuthenticationRepository();
+        mWechatInfoRepository = Injection.getWechatInfoRepository();
         mWechatAuthenticationBean = new WechatAuthenticationBean();
     }
 
@@ -104,6 +109,7 @@ public class WeChatLoginPresenter extends BasePresenter<WechatLoginContract.View
                         mWechatAuthenticationBean.setUid(userBean.getUserName());
                         mWechatAuthenticationBean.setSyncKey(syncKeyBean);
                         mWechatAuthenticationRepository.saveWechatAuthInfo(mWechatAuthenticationBean);
+                        mWechatInfoRepository.saveWechatContactors(Arrays.asList(userBean));
                         LoginWechatUser user = new LoginWechatUser(userBean.getUin());
                         user.setWechatUserBean(userBean);
                         mWechatAuthenticationRepository.saveLoginWechatUser(user);

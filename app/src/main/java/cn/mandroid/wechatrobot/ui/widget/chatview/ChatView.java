@@ -12,9 +12,13 @@ import android.widget.AbsListView;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import cn.mandroid.wechatrobot.model.common.Injection;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatMessage;
+import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.WechatMessageBean;
 
 /**
@@ -23,6 +27,7 @@ import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.WechatMessageBe
 
 public class ChatView extends RecyclerView {
     ChatViewAdapter mAdapter;
+    private static Map<String, WechatUserBean> sWechatUserMap = new HashMap<>();
 
     public ChatView(Context context) {
         this(context, null);
@@ -37,7 +42,7 @@ public class ChatView extends RecyclerView {
         setLayoutManager(new LinearLayoutManager(context));
     }
 
-    public void setHistoryMessage( List<WechatMessage> wechatMessages) {
+    public void setHistoryMessage(List<WechatMessage> wechatMessages) {
         mAdapter = new ChatViewAdapter(getContext(), wechatMessages);
         setAdapter(mAdapter);
     }
@@ -119,9 +124,17 @@ public class ChatView extends RecyclerView {
         @Override
         public void onBindViewHolder(ChatViewHolder holder, int position) {
             WechatMessage message = mWechatMessages.get(position);
-            holder.setData("", message.getFromUserName(), message.getContent());
+            if (sWechatUserMap.containsKey(message.getFromUserName())) {
+                WechatUserBean wechatUserBean = sWechatUserMap.get(message.getFromUserName());
+                holder.setData(wechatUserBean.getHeadImgUrl(), wechatUserBean.getNickName(), message.getContent());
+            } else {
+                WechatUserBean wechatUserBean = Injection.getWechatInfoRepository().getLocalWechatContactor(message.getFromUserName());
+                if (wechatUserBean != null) {
+                    sWechatUserMap.put(message.getFromUserName(), wechatUserBean);
+                    holder.setData(wechatUserBean.getHeadImgUrl(), wechatUserBean.getNickName(), message.getContent());
+                }
+            }
         }
-
 
         public static class ChatViewHolder extends ViewHolder {
             private IChatBubble mChatBubble;

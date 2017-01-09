@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import cn.mandroid.wechatrobot.gen.DaoMaster;
 import cn.mandroid.wechatrobot.gen.DaoSession;
+import cn.mandroid.wechatrobot.utils.ImageLoader;
 
 /**
  * Created by wrBug on 2017/1/1.
@@ -22,6 +23,12 @@ public class WechatRobotApp extends Application {
         super.onCreate();
         INSTANCE = this;
         setDatabase();
+    }
+
+    @Override
+    public void onTerminate() {
+        ImageLoader.removeAllCache();
+        super.onTerminate();
     }
 
     public static WechatRobotApp getApplication() {

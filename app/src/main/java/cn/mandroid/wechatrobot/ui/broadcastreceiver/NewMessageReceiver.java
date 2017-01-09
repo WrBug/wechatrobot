@@ -11,6 +11,8 @@ import java.util.List;
 import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.WechatMessageBean;
 
 public class NewMessageReceiver extends BroadcastReceiver {
+    public final static String ACTION_SERVICE_STARTED = "ACTION_SERVICE_STARTED";
+    public final static String ACTION_SERVICE_STOPED = "ACTION_SERVICE_STOPED";
     public final static String ACTION_NEW_MESSAGE = "ACTION_NEW_MESSAGE";
     public final static String ACTION_AUTH_FALID = "ACTION_AUTH_FALID";
     public final static String MESSAGE_VO = "MESSAGE_VO";
@@ -23,6 +25,8 @@ public class NewMessageReceiver extends BroadcastReceiver {
     public static NewMessageReceiver getInstance(Context context) {
         NewMessageReceiver receiver = new NewMessageReceiver();
         IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(NewMessageReceiver.ACTION_SERVICE_STARTED);
+        intentFilter.addAction(NewMessageReceiver.ACTION_SERVICE_STOPED);
         intentFilter.addAction(NewMessageReceiver.ACTION_NEW_MESSAGE);
         intentFilter.addAction(NewMessageReceiver.ACTION_AUTH_FALID);
         context.registerReceiver(receiver, intentFilter);
@@ -51,7 +55,29 @@ public class NewMessageReceiver extends BroadcastReceiver {
             case ACTION_NEW_MESSAGE: {
                 WechatMessageBean vo = (WechatMessageBean) intent.getSerializableExtra(MESSAGE_VO);
                 sendNewMessage(vo);
+                break;
             }
+            case ACTION_SERVICE_STARTED: {
+                sendServiceStartedAction();
+                break;
+            }
+            case ACTION_SERVICE_STOPED: {
+                sendServiceStopedAction();
+                break;
+            }
+        }
+    }
+
+    private void sendServiceStopedAction() {
+        for (OnNewMessageListener listener : listeners) {
+            listener.onServiceStoped();
+        }
+
+    }
+
+    private void sendServiceStartedAction() {
+        for (OnNewMessageListener listener : listeners) {
+            listener.onServiceStarted();
         }
     }
 
@@ -71,5 +97,9 @@ public class NewMessageReceiver extends BroadcastReceiver {
         void onNewMessage(WechatMessageBean vo);
 
         void onAuthFalid();
+
+        void onServiceStarted();
+
+        void onServiceStoped();
     }
 }

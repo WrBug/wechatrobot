@@ -45,6 +45,7 @@ import android.widget.FrameLayout;
 
 import cn.mandroid.wechatrobot.R;
 import cn.mandroid.wechatrobot.model.entity.IImageLoader;
+import cn.mandroid.wechatrobot.ui.widget.RoundCornerImageView;
 
 /**
  * FabOptions component
@@ -117,12 +118,12 @@ public class FabOptions extends FrameLayout implements View.OnClickListener, IIm
         }
     }
 
-    public AppCompatImageView getChild(int index) {
-        return (AppCompatImageView) mButtonContainer.getChildAt(index);
+    public RoundCornerImageView getChild(int index) {
+        return (RoundCornerImageView) mButtonContainer.getChildAt(index);
     }
 
     private void addButton(Context context, MenuItem menuItem) {
-        AppCompatImageView button = mButtonContainer.addButton(context, menuItem.getItemId(),
+        RoundCornerImageView button = mButtonContainer.addButton(context, menuItem.getItemId(),
                 menuItem.getTitle(), menuItem.getIcon());
         button.setOnClickListener(this);
     }

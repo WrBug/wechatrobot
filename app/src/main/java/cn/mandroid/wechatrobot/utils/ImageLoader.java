@@ -67,6 +67,11 @@ public class ImageLoader {
         }
     }
 
+    public static void removeAllCache() {
+        downloadingUrlCache.clear();
+        cache.clear();
+    }
+
     public static ImageHelper load(String url) {
         return load(url, true);
     }
@@ -94,7 +99,6 @@ public class ImageLoader {
                 }
             }
         } else {
-            cache.put(url, new SoftReference<>(BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher)));
             imageHelper.setIsEmptyBitmap(true);
             imageHelper.loadFinished();
         }
@@ -318,7 +322,6 @@ public class ImageLoader {
                     Matrix matrix = new Matrix();
                     matrix.setScale(scale, scale);
                     Bitmap bm = Bitmap.createBitmap(mBitmap, 0, 0, (int) bmWidth, (int) bmHeight, matrix, true);
-                    mBitmap.recycle();
                     mBitmap = bm;
                 }
                 if (cropCircle) {
@@ -395,6 +398,9 @@ public class ImageLoader {
         public boolean containsKey(Object key) {
             if (super.containsKey(key)) {
                 SoftReference<Bitmap> bitmapSoftReference = super.get(key);
+                if (bitmapSoftReference.get() != null && bitmapSoftReference.get().isRecycled()){
+                    MLog.i(key+" isRecycled");
+                }
                 if (bitmapSoftReference.get() == null || bitmapSoftReference.get().isRecycled()) {
                     bitmapSoftReference.clear();
                     remove(key);
