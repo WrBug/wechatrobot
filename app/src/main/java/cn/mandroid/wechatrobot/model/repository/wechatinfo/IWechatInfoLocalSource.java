@@ -2,6 +2,7 @@ package cn.mandroid.wechatrobot.model.repository.wechatinfo;
 
 import java.util.List;
 
+import cn.mandroid.wechatrobot.model.entity.dao.WechatMessage;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 
 /**
@@ -12,4 +13,8 @@ public interface IWechatInfoLocalSource {
     void saveWechatContactors(List<WechatUserBean> userBeens);
 
     WechatUserBean getLocalWechatContactor(String username);
+
+    void saveWechatMessages(List<WechatMessage> messages);
+
+    List<WechatMessage> getWechatMessages(long uin);
 }

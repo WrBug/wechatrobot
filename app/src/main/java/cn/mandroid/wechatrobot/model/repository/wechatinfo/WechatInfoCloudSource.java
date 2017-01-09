@@ -112,6 +112,7 @@ public class WechatInfoCloudSource extends BaseCloudSource implements IWechatInf
                     @Override
                     public void onError(Throwable e) {
                         MLog.e(e);
+                        callback.onEmpty();
                     }
 
                     @Override

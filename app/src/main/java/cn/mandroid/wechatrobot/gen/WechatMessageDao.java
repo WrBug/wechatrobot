@@ -65,7 +65,7 @@ public class WechatMessageDao extends AbstractDao<WechatMessage, String> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"WECHAT_MESSAGE\" (" + //
-                "\"MSG_ID\" TEXT PRIMARY KEY NOT NULL ," + // 0: MsgId
+                "\"MSG_ID\" TEXT PRIMARY KEY NOT NULL UNIQUE ," + // 0: MsgId
                 "\"UIN\" INTEGER NOT NULL ," + // 1: uin
                 "\"IS_FROM_MINE\" INTEGER NOT NULL ," + // 2: isFromMine
                 "\"FROM_USER_NAME\" TEXT," + // 3: FromUserName
@@ -91,6 +91,9 @@ public class WechatMessageDao extends AbstractDao<WechatMessage, String> {
                 "\"IMG_WIDTH\" INTEGER NOT NULL ," + // 23: ImgWidth
                 "\"SUB_MSG_TYPE\" INTEGER NOT NULL ," + // 24: SubMsgType
                 "\"NEW_MSG_ID\" INTEGER NOT NULL );"); // 25: NewMsgId
+        // Add Indexes
+        db.execSQL("CREATE INDEX " + constraint + "IDX_WECHAT_MESSAGE_CREATE_TIME ON WECHAT_MESSAGE" +
+                " (\"CREATE_TIME\" ASC);");
     }
 
     /** Drops the underlying database table. */

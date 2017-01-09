@@ -45,6 +45,7 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
 
     @Override
     protected void afterView() {
+        setSupportActionBar(mToolBar);
         mFloatMenu.setButtonsMenu(this, R.menu.menu_home_bottom);
         avatar = mFloatMenu.getChild(0);
         mPersenter.loadUserInfo();
@@ -62,11 +63,6 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
 
     }
 
-    @Override
-    protected void beforeInject() {
-        initReceiver();
-    }
-
     private void initReceiver() {
         mNewMessageReceiver = NewMessageReceiver.getInstance(this);
         mNewMessageReceiver.addNewMessageListener(this);
@@ -74,7 +70,10 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
 
     @Override
     protected void onDestroy() {
-        mNewMessageReceiver.removeNewMessageListener(this);
+        if (mNewMessageReceiver!=null) {
+            mNewMessageReceiver.removeNewMessageListener(this);
+            unregisterReceiver(mNewMessageReceiver);
+        }
         stopService(new Intent(this, NewWechatMessageListenerLoopService.class));
         super.onDestroy();
     }
@@ -142,7 +141,7 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
 
     @Override
     public void setNickname(String nickname) {
-        mToolBar.setTitle(nickname);
+        setActionBarTitle(nickname);
         showToast(nickname + "，欢迎回来！", mCoordinatorLayout);
     }
 
@@ -156,9 +155,6 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.questionMenu: {
-                break;
-            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -177,21 +173,26 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
     public void contactorsLoadFinished(WechatAuthenticationBean bean) {
         contactorsLoadFinished = true;
         mWechatAuthenticationBean = bean;
-        mChatView.setHistoryMessage(bean.getUin(), null);
+        initReceiver();
+    }
 
+    @Override
+    public void showWechatMessageCache(List<WechatMessage> messages) {
+        mChatView.setHistoryMessage(messages);
+    }
+
+    @Override
+    public void showWechatMessage(List<WechatMessage> messages) {
+        mChatView.addMessage(messages);
     }
 
     @Override
     public void onNewMessage(WechatMessageBean vo) {
-        List<WechatMessage> wechatMessages = vo.getAddMsgList();
-        for (int i = 0; i < vo.getAddMsgList().size(); i++) {
-            wechatMessages.get(i).setUin(mWechatAuthenticationBean.getUin());
-        }
-        mChatView.addMessage(vo.getAddMsgList());
+        mPersenter.saveMessages(vo);
     }
 
     @Override
     public void onAuthFalid() {
-        MLog.i(" 重新登录");
+        enterLoginActivity();
     }
 }

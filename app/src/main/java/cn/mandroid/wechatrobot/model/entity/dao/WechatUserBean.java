@@ -230,7 +230,7 @@ public class WechatUserBean extends BaseBean {
     }
 
     public String getHeadImgUrl() {
-        return "https://wx.qq.com" + HeadImgUrl;
+        return HeadImgUrl.startsWith("https://wx.qq.com") ? HeadImgUrl : "https://wx.qq.com" + HeadImgUrl;
     }
 
     public void setHeadImgUrl(String HeadImgUrl) {

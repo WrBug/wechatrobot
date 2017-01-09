@@ -3,6 +3,8 @@ package cn.mandroid.wechatrobot.model.entity.dao;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Index;
+import org.greenrobot.greendao.annotation.OrderBy;
 import org.greenrobot.greendao.annotation.Transient;
 
 import java.io.Serializable;
@@ -10,14 +12,17 @@ import java.io.Serializable;
 import cn.mandroid.wechatrobot.model.entity.BaseBean;
 import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.AppInfoBean;
 import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.RecommendInfoBean;
+
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Unique;
 
 /**
  * Created by WrBug on 2016/12/21.
  */
-@Entity
+@Entity(indexes = {@Index(value = "CreateTime ASC")})
 public class WechatMessage extends BaseBean {
     @Id
+    @Unique
     private String MsgId;
     private long uin;
     private boolean isFromMine;
@@ -51,13 +56,13 @@ public class WechatMessage extends BaseBean {
 
     @Generated(hash = 843128925)
     public WechatMessage(String MsgId, long uin, boolean isFromMine,
-            String FromUserName, String ToUserName, long MsgType, String Content,
-            long Status, long ImgStatus, long CreateTime, long VoiceLength,
-            long PlayLength, String FileName, String FileSize, String MediaId,
-            String Url, long AppMsgType, long StatusNotifyCode,
-            String StatusNotifyUserName, long ForwardFlag, long HasProductId,
-            String Ticket, long ImgHeight, long ImgWidth, long SubMsgType,
-            long NewMsgId) {
+                         String FromUserName, String ToUserName, long MsgType, String Content,
+                         long Status, long ImgStatus, long CreateTime, long VoiceLength,
+                         long PlayLength, String FileName, String FileSize, String MediaId,
+                         String Url, long AppMsgType, long StatusNotifyCode,
+                         String StatusNotifyUserName, long ForwardFlag, long HasProductId,
+                         String Ticket, long ImgHeight, long ImgWidth, long SubMsgType,
+                         long NewMsgId) {
         this.MsgId = MsgId;
         this.uin = uin;
         this.isFromMine = isFromMine;
@@ -224,6 +229,10 @@ public class WechatMessage extends BaseBean {
 
     public void setStatusNotifyUserName(String StatusNotifyUserName) {
         this.StatusNotifyUserName = StatusNotifyUserName;
+    }
+
+    public boolean isGroupMessage() {
+        return FromUserName.startsWith("@@") || ToUserName.startsWith("@@");
     }
 
     public RecommendInfoBean getRecommendInfo() {

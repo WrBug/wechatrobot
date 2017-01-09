@@ -37,8 +37,8 @@ public class ChatView extends RecyclerView {
         setLayoutManager(new LinearLayoutManager(context));
     }
 
-    public void setHistoryMessage(long uin, List<WechatMessage> wechatMessages) {
-        mAdapter = new ChatViewAdapter(getContext(), uin, wechatMessages);
+    public void setHistoryMessage( List<WechatMessage> wechatMessages) {
+        mAdapter = new ChatViewAdapter(getContext(), wechatMessages);
         setAdapter(mAdapter);
     }
 
@@ -54,16 +54,14 @@ public class ChatView extends RecyclerView {
         private static final int TYPE_LEFT = 1;
         private static final int TYPE_RIGHT = 2;
         private List<WechatMessage> mWechatMessages;
-        private long mUin;
         private Context mContext;
 
-        public ChatViewAdapter(Context context, long uin, List<WechatMessage> wechatMessages) {
+        public ChatViewAdapter(Context context, List<WechatMessage> wechatMessages) {
             mContext = context;
             mWechatMessages = wechatMessages;
             if (mWechatMessages == null) {
                 mWechatMessages = new ArrayList<>();
             }
-            mUin = uin;
         }
 
         public void addMessage(WechatMessage... wechatMessages) {
@@ -92,7 +90,7 @@ public class ChatView extends RecyclerView {
         @Override
         public int getItemViewType(int position) {
             WechatMessage message = mWechatMessages.get(position);
-            if (message.getUin() == mUin && message.getIsFromMine()) {
+            if (message.getIsFromMine()) {
                 return TYPE_RIGHT;
             } else {
                 return TYPE_LEFT;

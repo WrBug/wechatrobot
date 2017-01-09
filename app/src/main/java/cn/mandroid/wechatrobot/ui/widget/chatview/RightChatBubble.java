@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.mandroid.wechatrobot.R;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 import cn.mandroid.wechatrobot.ui.widget.RoundCornerImageView;
@@ -47,6 +48,7 @@ public class RightChatBubble extends LinearLayout implements IChatBubble {
     private void init(Context context) {
         this.mContext = context;
         LayoutInflater.from(mContext).inflate(R.layout.layout_right_chat_bubble, this);
+        ButterKnife.bind(this);
     }
 
 

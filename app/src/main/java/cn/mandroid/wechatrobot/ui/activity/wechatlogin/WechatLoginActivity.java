@@ -53,11 +53,6 @@ public class WechatLoginActivity extends BaseActivity<WechatLoginContract.Presen
     }
 
     @Override
-    protected void beforeInject() {
-
-    }
-
-    @Override
     protected WechatLoginContract.Presenter setPresenter() {
         return new WeChatLoginPresenter(this);
     }

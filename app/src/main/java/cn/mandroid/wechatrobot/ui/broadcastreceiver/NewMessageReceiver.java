@@ -11,7 +11,6 @@ import java.util.List;
 import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.WechatMessageBean;
 
 public class NewMessageReceiver extends BroadcastReceiver {
-    private static volatile NewMessageReceiver INSTANCE;
     public final static String ACTION_NEW_MESSAGE = "ACTION_NEW_MESSAGE";
     public final static String ACTION_AUTH_FALID = "ACTION_AUTH_FALID";
     public final static String MESSAGE_VO = "MESSAGE_VO";
@@ -22,16 +21,12 @@ public class NewMessageReceiver extends BroadcastReceiver {
     }
 
     public static NewMessageReceiver getInstance(Context context) {
-        if (INSTANCE == null) {
-            synchronized (NewMessageReceiver.class) {
-                INSTANCE = new NewMessageReceiver();
-                IntentFilter intentFilter = new IntentFilter();
-                intentFilter.addAction(NewMessageReceiver.ACTION_NEW_MESSAGE);
-                intentFilter.addAction(NewMessageReceiver.ACTION_AUTH_FALID);
-                context.registerReceiver(INSTANCE, intentFilter);
-            }
-        }
-        return INSTANCE;
+        NewMessageReceiver receiver = new NewMessageReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(NewMessageReceiver.ACTION_NEW_MESSAGE);
+        intentFilter.addAction(NewMessageReceiver.ACTION_AUTH_FALID);
+        context.registerReceiver(receiver, intentFilter);
+        return receiver;
     }
 
     public void addNewMessageListener(OnNewMessageListener listener) {

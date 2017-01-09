@@ -12,6 +12,7 @@ import cn.mandroid.wechatrobot.model.common.Injection;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
 import cn.mandroid.wechatrobot.model.entity.wechat.WechatSyncKeyBean;
 import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.WechatMessageBean;
+import cn.mandroid.wechatrobot.model.repository.wechatauth.WechatAuthenticationRepository;
 import cn.mandroid.wechatrobot.model.repository.wechatinfo.IWechatInfoCloudSource;
 import cn.mandroid.wechatrobot.model.repository.wechatinfo.WechatInfoRepository;
 import cn.mandroid.wechatrobot.ui.broadcastreceiver.NewMessageReceiver;
@@ -30,6 +31,7 @@ public class NewWechatMessageListenerLoopService extends IntentService {
 
     private static final String WECHAT_AUTHENTICATION_BEAN = "WECHAT_AUTHENTICATION_BEAN";
     private WechatInfoRepository mWechatInfoRepository;
+    private WechatAuthenticationRepository mWechatAuthenticationRepository;
     private WechatAuthenticationBean mWechatAuthenticationBean;
     private ExecutorService mExecutorService;
     private int emptyMessageCount = 0;
@@ -37,6 +39,7 @@ public class NewWechatMessageListenerLoopService extends IntentService {
     public NewWechatMessageListenerLoopService() {
         super("NewWechatMessageListenerLoopService");
         mWechatInfoRepository = Injection.getWechatInfoRepository();
+        mWechatAuthenticationRepository = Injection.getWechatAuthenticationRepository();
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
@@ -74,7 +77,7 @@ public class NewWechatMessageListenerLoopService extends IntentService {
             final String action = intent.getAction();
             if (ACTION_MESSAGE_LOOP.equals(action)) {
                 mWechatAuthenticationBean = (WechatAuthenticationBean) intent.getSerializableExtra(WECHAT_AUTHENTICATION_BEAN);
-                mExecutorService.submit(handleActionMessageLoop());
+                mExecutorService.execute(handleActionMessageLoop());
             }
         }
         while (true) ;
@@ -98,13 +101,14 @@ public class NewWechatMessageListenerLoopService extends IntentService {
                     emptyMessageCount = 0;
                     int msgCount = vo.getAddMsgCount();
                     mWechatAuthenticationBean.setSyncKey(msgCount == 0 ? vo.getSyncCheckKey() : vo.getSyncKey());
+                    mWechatAuthenticationRepository.saveWechatAuthInfo(mWechatAuthenticationBean);
                     if (msgCount > 0) {
                         Intent intent = new Intent(NewMessageReceiver.ACTION_NEW_MESSAGE);
                         intent.putExtra(NewMessageReceiver.MESSAGE_VO, vo);
                         sendBroadcast(intent);
                     }
                 }
-                mExecutorService.submit(handleActionMessageLoop());
+                mExecutorService.execute(handleActionMessageLoop());
             }
 
             @Override
@@ -113,14 +117,14 @@ public class NewWechatMessageListenerLoopService extends IntentService {
                 if (emptyMessageCount >= 10) {
                     sendAuthFailed();
                 } else {
-                    mExecutorService.submit(handleActionMessageLoop());
+                    mExecutorService.execute(handleActionMessageLoop());
                 }
             }
 
             @Override
             public void onNoNewMessage() {
                 emptyMessageCount = 0;
-                mExecutorService.submit(handleActionMessageLoop());
+                mExecutorService.execute(handleActionMessageLoop());
             }
 
             @Override

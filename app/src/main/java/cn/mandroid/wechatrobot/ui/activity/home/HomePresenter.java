@@ -1,18 +1,20 @@
 package cn.mandroid.wechatrobot.ui.activity.home;
 
-import android.support.design.widget.CoordinatorLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.mandroid.wechatrobot.model.common.Api;
 import cn.mandroid.wechatrobot.model.common.Injection;
 import cn.mandroid.wechatrobot.model.entity.dao.LoginWechatUser;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
+import cn.mandroid.wechatrobot.model.entity.dao.WechatMessage;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 import cn.mandroid.wechatrobot.model.entity.wechat.WechatContactVo;
+import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.WechatMessageBean;
 import cn.mandroid.wechatrobot.model.repository.wechatauth.WechatAuthenticationRepository;
 import cn.mandroid.wechatrobot.model.repository.wechatinfo.IWechatInfoCloudSource;
 import cn.mandroid.wechatrobot.model.repository.wechatinfo.WechatInfoRepository;
 import cn.mandroid.wechatrobot.ui.activity.common.BasePresenter;
-import cn.mandroid.wechatrobot.utils.MLog;
 
 /**
  * Created by wrBug on 2017/1/1.
@@ -50,6 +52,21 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         }
     }
 
+    @Override
+    public void saveMessages(WechatMessageBean messageBean) {
+        List<WechatMessage> wechatMessages = messageBean.getAddMsgList();
+        List<WechatMessage> cache = new ArrayList<>(wechatMessages);
+        for (int i = 0; i < messageBean.getAddMsgList().size(); i++) {
+            wechatMessages.get(i).setUin(mWechatAuthenticationBean.getUin());
+            wechatMessages.get(i).setIsFromMine(wechatMessages.get(i).getFromUserName().equals(mUser.getUserName()));
+            if (wechatMessages.get(i).getMsgType() == 51||wechatMessages.get(i).isGroupMessage()) {
+                cache.remove(wechatMessages.get(i));
+            }
+        }
+        mWechatInfoRepository.saveWechatMessages(wechatMessages);
+        mView.showWechatMessage(cache);
+    }
+
     private void getWechatAuthInfo(long uin) {
         mWechatAuthenticationBean = mWechatAuthenticationRepository.getWechatAuthInfo(uin);
         if (mWechatAuthenticationBean == null) {
@@ -58,6 +75,8 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
             Api.setCookie(mWechatAuthenticationBean.getCookie());
             mView.setNickname(mUser.getNickName());
             mView.setAvatarImage(mUser.getHeadImgUrl());
+            List<WechatMessage> cacheMsg = mWechatInfoRepository.getWechatMessages(mUser.getUin());
+            mView.showWechatMessageCache(cacheMsg);
             getContactor();
         }
     }

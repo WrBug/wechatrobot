@@ -3,6 +3,7 @@ package cn.mandroid.wechatrobot.model.repository.wechatinfo;
 import java.util.List;
 import java.util.Map;
 
+import cn.mandroid.wechatrobot.model.entity.dao.WechatMessage;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 import cn.mandroid.wechatrobot.model.entity.wechat.WechatSyncKeyBean;
 
@@ -43,5 +44,13 @@ public class WechatInfoRepository {
 
     public void wechatMessageLoop(String baseUrl, String sid, String skey, long uin, String syncKey, String passTicket, Map<String, String> baseRequest, WechatSyncKeyBean syncKeyBean, IWechatInfoCloudSource.WechatMessageLoopCallback callback) {
         mWechatInfoCloudSource.wechatMessageLoop(baseUrl, sid, skey, uin, syncKey, passTicket, baseRequest, syncKeyBean, callback);
+    }
+
+    public void saveWechatMessages(List<WechatMessage> messages) {
+        mWechatInfoLocalSource.saveWechatMessages(messages);
+    }
+
+    public List<WechatMessage> getWechatMessages(long uin) {
+        return mWechatInfoLocalSource.getWechatMessages(uin);
     }
 }
