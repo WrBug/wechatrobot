@@ -10,7 +10,7 @@ import cn.mandroid.wechatrobot.model.entity.BaseBean;
  * Created by wrBug on 2017/1/9.
  */
 
-public class TuringRespBean extends BaseBean{
+public class TuringRespVo extends BaseBean{
 
     /**
      * text : 杭州是个风景如画的城市呐

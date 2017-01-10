@@ -3,7 +3,7 @@ package cn.mandroid.wechatrobot.model.repository.turingrobot;
 import android.text.TextUtils;
 
 import cn.mandroid.wechatrobot.model.common.BaseCloudSource;
-import cn.mandroid.wechatrobot.model.entity.turing.TuringRespBean;
+import cn.mandroid.wechatrobot.model.entity.turing.TuringRespVo;
 import cn.mandroid.wechatrobot.utils.MLog;
 import rx.Subscriber;
 
@@ -11,7 +11,7 @@ import rx.Subscriber;
  * Created by wrBug on 2017/1/9.
  */
 
-public class TuringCloudSource extends BaseCloudSource implements ITuringCloudSource {
+public class TuRingCloudSource2 extends BaseCloudSource implements ITuRingCloudSource1 {
     @Override
     public void getTuringResp(String username, String msg, final GetTuringRespCallback callback) {
         String url = "http://apis.baidu.com/turing/turing/turing";
@@ -32,7 +32,7 @@ public class TuringCloudSource extends BaseCloudSource implements ITuringCloudSo
                     @Override
                     public void onNext(String s) {
                         if (!TextUtils.isEmpty(s)) {
-                            TuringRespBean bean = mGson.fromJson(s, TuringRespBean.class);
+                            TuringRespVo bean = mGson.fromJson(s, TuringRespVo.class);
                             if (bean!=null) {
                                 callback.onSuccess(bean);
                             }

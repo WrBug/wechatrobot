@@ -1,6 +1,6 @@
 package cn.mandroid.wechatrobot.model.common;
 
-import cn.mandroid.wechatrobot.model.repository.turingrobot.TuringRepostory;
+import cn.mandroid.wechatrobot.model.repository.turingrobot.TuRingRepostory3;
 import cn.mandroid.wechatrobot.model.repository.wechatauth.WechatAuthenticationRepository;
 import cn.mandroid.wechatrobot.model.repository.wechatinfo.WechatInfoRepository;
 
@@ -17,7 +17,7 @@ public class Injection {
         return WechatInfoRepository.getInstance();
     }
 
-    public static TuringRepostory getTuringRepostory() {
-        return TuringRepostory.getInstance();
+    public static TuRingRepostory3 getTuringRepostory() {
+        return TuRingRepostory3.getInstance();
     }
 }

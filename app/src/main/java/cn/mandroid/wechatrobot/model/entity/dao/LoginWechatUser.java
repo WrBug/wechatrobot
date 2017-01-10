@@ -2,21 +2,12 @@ package cn.mandroid.wechatrobot.model.entity.dao;
 
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Property;
-import org.greenrobot.greendao.annotation.ToOne;
 import org.greenrobot.greendao.annotation.Transient;
-import org.greenrobot.greendao.annotation.Unique;
 import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.DaoException;
-
-import cn.mandroid.wechatrobot.gen.DaoSession;
-import cn.mandroid.wechatrobot.gen.WechatUserBeanDao;
-import cn.mandroid.wechatrobot.gen.LoginWechatUserDao;
 
 /**
  * Created by wrBug on 2017/1/2.
