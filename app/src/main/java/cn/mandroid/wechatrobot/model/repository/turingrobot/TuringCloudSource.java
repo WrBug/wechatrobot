@@ -11,7 +11,7 @@ import rx.Subscriber;
  * Created by wrBug on 2017/1/9.
  */
 
-public class TuRingCloudSource2 extends BaseCloudSource implements ITuRingCloudSource1 {
+public class TuringCloudSource extends BaseCloudSource implements ITuringCloudSource {
     @Override
     public void getTuringResp(String username, String msg, final GetTuringRespCallback callback) {
         String url = "http://apis.baidu.com/turing/turing/turing";

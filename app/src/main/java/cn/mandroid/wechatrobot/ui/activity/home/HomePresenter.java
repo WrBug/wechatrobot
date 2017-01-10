@@ -12,8 +12,8 @@ import cn.mandroid.wechatrobot.model.entity.dao.WechatUserBean;
 import cn.mandroid.wechatrobot.model.entity.turing.TuringRespVo;
 import cn.mandroid.wechatrobot.model.entity.wechat.WechatContactVo;
 import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.WechatMessageBean;
-import cn.mandroid.wechatrobot.model.repository.turingrobot.ITuRingCloudSource1;
-import cn.mandroid.wechatrobot.model.repository.turingrobot.TuRingRepostory3;
+import cn.mandroid.wechatrobot.model.repository.turingrobot.ITuringCloudSource;
+import cn.mandroid.wechatrobot.model.repository.turingrobot.TuringRepostory;
 import cn.mandroid.wechatrobot.model.repository.wechatauth.WechatAuthenticationRepository;
 import cn.mandroid.wechatrobot.model.repository.wechatinfo.IWechatInfoCloudSource;
 import cn.mandroid.wechatrobot.model.repository.wechatinfo.WechatInfoRepository;
@@ -28,7 +28,7 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
     private WechatInfoRepository mWechatInfoRepository;
     private WechatUserBean mUser;
     private WechatAuthenticationBean mWechatAuthenticationBean;
-    private TuRingRepostory3 mTuringRepostory;
+    private TuringRepostory mTuringRepostory;
 
     public HomePresenter(HomeContract.View view) {
         super(view);
@@ -79,7 +79,7 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         }
         final WechatMessage message = wechatMessage.getAddMsgList().get(0);
         if (message.getMsgType() == WechatMessage.TEXT) {
-            mTuringRepostory.getTuringResp(message.getFromUserName(), message.getContent(), new ITuRingCloudSource1.GetTuringRespCallback() {
+            mTuringRepostory.getTuringResp(message.getFromUserName(), message.getContent(), new ITuringCloudSource.GetTuringRespCallback() {
                 @Override
                 public void onSuccess(TuringRespVo turingRespBean) {
                     String text = turingRespBean.getShowtext();
