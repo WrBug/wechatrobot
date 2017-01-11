@@ -131,13 +131,13 @@ public class ChatView extends RecyclerView {
         @Override
         public void onBindViewHolder(ChatViewHolder holder, int position) {
             WechatMessage message = mWechatMessages.get(position);
-            if (sWechatUserMap.containsKey(message.getFromUserName())) {
-                WechatUserBean wechatUserBean = sWechatUserMap.get(message.getFromUserName());
+            if (sWechatUserMap.containsKey(message.getUserHash())) {
+                WechatUserBean wechatUserBean = sWechatUserMap.get(message.getUserHash());
                 holder.setData(wechatUserBean.getHeadImgUrl(), wechatUserBean.getNickName(), message);
             } else {
                 WechatUserBean wechatUserBean = Injection.getWechatInfoRepository().getLocalWechatContactor(message.getFromUserName());
                 if (wechatUserBean != null) {
-                    sWechatUserMap.put(message.getFromUserName(), wechatUserBean);
+                    sWechatUserMap.put(message.getUserHash(), wechatUserBean);
                     holder.setData(wechatUserBean.getHeadImgUrl(), wechatUserBean.getNickName(), message);
                 }
             }

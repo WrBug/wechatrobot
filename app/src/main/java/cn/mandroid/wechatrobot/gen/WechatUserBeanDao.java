@@ -55,7 +55,7 @@ public class WechatUserBeanDao extends AbstractDao<WechatUserBean, String> {
         public final static Property ChatRoomId = new Property(28, long.class, "ChatRoomId", false, "CHAT_ROOM_ID");
         public final static Property KeyWord = new Property(29, String.class, "KeyWord", false, "KEY_WORD");
         public final static Property EncryChatRoomId = new Property(30, String.class, "EncryChatRoomId", false, "ENCRY_CHAT_ROOM_ID");
-        public final static Property UserId = new Property(31, String.class, "userId", false, "USER_ID");
+        public final static Property HashCode = new Property(31, String.class, "hashCode", false, "HASH_CODE");
     }
 
 
@@ -102,7 +102,7 @@ public class WechatUserBeanDao extends AbstractDao<WechatUserBean, String> {
                 "\"CHAT_ROOM_ID\" INTEGER NOT NULL ," + // 28: ChatRoomId
                 "\"KEY_WORD\" TEXT," + // 29: KeyWord
                 "\"ENCRY_CHAT_ROOM_ID\" TEXT," + // 30: EncryChatRoomId
-                "\"USER_ID\" TEXT UNIQUE );"); // 31: userId
+                "\"HASH_CODE\" TEXT UNIQUE );"); // 31: hashCode
     }
 
     /** Drops the underlying database table. */
@@ -206,9 +206,9 @@ public class WechatUserBeanDao extends AbstractDao<WechatUserBean, String> {
             stmt.bindString(31, EncryChatRoomId);
         }
  
-        String userId = entity.getUserId();
-        if (userId != null) {
-            stmt.bindString(32, userId);
+        String hashCode = entity.getHashCode();
+        if (hashCode != null) {
+            stmt.bindString(32, hashCode);
         }
     }
 
@@ -307,9 +307,9 @@ public class WechatUserBeanDao extends AbstractDao<WechatUserBean, String> {
             stmt.bindString(31, EncryChatRoomId);
         }
  
-        String userId = entity.getUserId();
-        if (userId != null) {
-            stmt.bindString(32, userId);
+        String hashCode = entity.getHashCode();
+        if (hashCode != null) {
+            stmt.bindString(32, hashCode);
         }
     }
 
@@ -352,7 +352,7 @@ public class WechatUserBeanDao extends AbstractDao<WechatUserBean, String> {
             cursor.getLong(offset + 28), // ChatRoomId
             cursor.isNull(offset + 29) ? null : cursor.getString(offset + 29), // KeyWord
             cursor.isNull(offset + 30) ? null : cursor.getString(offset + 30), // EncryChatRoomId
-            cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31) // userId
+            cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31) // hashCode
         );
         return entity;
     }
@@ -390,7 +390,7 @@ public class WechatUserBeanDao extends AbstractDao<WechatUserBean, String> {
         entity.setChatRoomId(cursor.getLong(offset + 28));
         entity.setKeyWord(cursor.isNull(offset + 29) ? null : cursor.getString(offset + 29));
         entity.setEncryChatRoomId(cursor.isNull(offset + 30) ? null : cursor.getString(offset + 30));
-        entity.setUserId(cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31));
+        entity.setHashCode(cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31));
      }
     
     @Override

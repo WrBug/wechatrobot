@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.OrderBy;
 import org.greenrobot.greendao.annotation.Transient;
 
@@ -56,17 +55,16 @@ public class WechatUserBean extends BaseBean {
     private String KeyWord;
     private String EncryChatRoomId;
     @Unique
-    private String userId;
+    private String hashCode;
     @Transient
     private List<WechatUserBean> MemberList;
 
-    @Generated(hash = 712188201)
-    public WechatUserBean(String UserName, long WebWxPluginSwitch, long HeadImgFlag, long Uin, String NickName,
-                          String HeadImgUrl, long ContactFlag, long MemberCount, String RemarkName, long HideInputBarFlag,
-                          long Sex, String Signature, long VerifyFlag, long OwnerUin, String PYInitial, String PYQuanPin,
-                          String RemarkPYInitial, String RemarkPYQuanPin, long StarFriend, long AppAccountFlag, long Statues,
-                          long AttrStatus, String Province, String City, String Alias, long SnsFlag, long UniFriend,
-                          String DisplayName, long ChatRoomId, String KeyWord, String EncryChatRoomId, String userId) {
+    @Generated(hash = 1224866078)
+    public WechatUserBean(String UserName, long WebWxPluginSwitch, long HeadImgFlag, long Uin, String NickName, String HeadImgUrl, long ContactFlag,
+            long MemberCount, String RemarkName, long HideInputBarFlag, long Sex, String Signature, long VerifyFlag, long OwnerUin, String PYInitial,
+            String PYQuanPin, String RemarkPYInitial, String RemarkPYQuanPin, long StarFriend, long AppAccountFlag, long Statues, long AttrStatus,
+            String Province, String City, String Alias, long SnsFlag, long UniFriend, String DisplayName, long ChatRoomId, String KeyWord,
+            String EncryChatRoomId, String hashCode) {
         this.UserName = UserName;
         this.WebWxPluginSwitch = WebWxPluginSwitch;
         this.HeadImgFlag = HeadImgFlag;
@@ -98,135 +96,61 @@ public class WechatUserBean extends BaseBean {
         this.ChatRoomId = ChatRoomId;
         this.KeyWord = KeyWord;
         this.EncryChatRoomId = EncryChatRoomId;
-        this.userId = userId;
+        this.hashCode = hashCode;
     }
 
     @Generated(hash = 1706827256)
     public WechatUserBean() {
     }
 
-    public long getUin() {
-        return Uin;
+    public String getHashCode() {
+        if (TextUtils.isEmpty(hashCode)) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(NickName).append(HeadImgFlag).append(ContactFlag).append(VerifyFlag).append(PYInitial).append(PYQuanPin).append(Alias);
+            hashCode = MD5.encode(builder.toString());
+        }
+        return this.hashCode;
     }
 
-    public long getMemberCount() {
-        return MemberCount;
-    }
+    public void setHashCode(String hashCode) {
 
-    public void setMemberCount(int memberCount) {
-        MemberCount = memberCount;
-    }
-
-    public long getOwnerUin() {
-        return OwnerUin;
-    }
-
-    public void setOwnerUin(int ownerUin) {
-        OwnerUin = ownerUin;
-    }
-
-    public long getStatues() {
-        return Statues;
-    }
-
-    public void setStatues(int statues) {
-        Statues = statues;
-    }
-
-    public long getAttrStatus() {
-        return AttrStatus;
-    }
-
-    public void setAttrStatus(long attrStatus) {
-        AttrStatus = attrStatus;
-    }
-
-    public String getProvince() {
-        return Province;
-    }
-
-    public void setProvince(String province) {
-        Province = province;
-    }
-
-    public String getCity() {
-        return City;
-    }
-
-    public void setCity(String city) {
-        City = city;
-    }
-
-    public String getAlias() {
-        return Alias;
-    }
-
-    public void setAlias(String alias) {
-        Alias = alias;
-    }
-
-    public long getUniFriend() {
-        return UniFriend;
-    }
-
-    public void setUniFriend(int uniFriend) {
-        UniFriend = uniFriend;
-    }
-
-    public String getDisplayName() {
-        return DisplayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        DisplayName = displayName;
-    }
-
-    public long getChatRoomId() {
-        return ChatRoomId;
-    }
-
-    public void setChatRoomId(int chatRoomId) {
-        ChatRoomId = chatRoomId;
-    }
-
-    public String getKeyWord() {
-        return KeyWord;
-    }
-
-    public void setKeyWord(String keyWord) {
-        KeyWord = keyWord;
-    }
-
-    public String getEncryChatRoomId() {
-        return EncryChatRoomId;
-    }
-
-    public void setEncryChatRoomId(String encryChatRoomId) {
-        EncryChatRoomId = encryChatRoomId;
-    }
-
-    public List<WechatUserBean> getMemberList() {
-        return MemberList;
-    }
-
-    public void setMemberList(List<WechatUserBean> memberList) {
-        MemberList = memberList;
-    }
-
-    public void setUin(int Uin) {
-        this.Uin = Uin;
+        this.hashCode = hashCode;
     }
 
     public String getUserName() {
-        return UserName;
+        return this.UserName;
     }
 
     public void setUserName(String UserName) {
         this.UserName = UserName;
     }
 
+    public long getWebWxPluginSwitch() {
+        return this.WebWxPluginSwitch;
+    }
+
+    public void setWebWxPluginSwitch(long WebWxPluginSwitch) {
+        this.WebWxPluginSwitch = WebWxPluginSwitch;
+    }
+
+    public long getHeadImgFlag() {
+        return this.HeadImgFlag;
+    }
+
+    public void setHeadImgFlag(long HeadImgFlag) {
+        this.HeadImgFlag = HeadImgFlag;
+    }
+
+    public long getUin() {
+        return this.Uin;
+    }
+
+    public void setUin(long Uin) {
+        this.Uin = Uin;
+    }
+
     public String getNickName() {
-        return TextUtils.isEmpty(DisplayName) ? NickName : DisplayName;
+        return this.NickName;
     }
 
     public void setNickName(String NickName) {
@@ -234,23 +158,79 @@ public class WechatUserBean extends BaseBean {
     }
 
     public String getHeadImgUrl() {
-        return HeadImgUrl.startsWith("https://wx.qq.com") ? HeadImgUrl : "https://wx.qq.com" + HeadImgUrl;
+        return this.HeadImgUrl;
     }
 
     public void setHeadImgUrl(String HeadImgUrl) {
         this.HeadImgUrl = HeadImgUrl;
     }
 
+    public long getContactFlag() {
+        return this.ContactFlag;
+    }
+
+    public void setContactFlag(long ContactFlag) {
+        this.ContactFlag = ContactFlag;
+    }
+
+    public long getMemberCount() {
+        return this.MemberCount;
+    }
+
+    public void setMemberCount(long MemberCount) {
+        this.MemberCount = MemberCount;
+    }
+
     public String getRemarkName() {
-        return RemarkName;
+        return this.RemarkName;
     }
 
     public void setRemarkName(String RemarkName) {
         this.RemarkName = RemarkName;
     }
 
+    public long getHideInputBarFlag() {
+        return this.HideInputBarFlag;
+    }
+
+    public void setHideInputBarFlag(long HideInputBarFlag) {
+        this.HideInputBarFlag = HideInputBarFlag;
+    }
+
+    public long getSex() {
+        return this.Sex;
+    }
+
+    public void setSex(long Sex) {
+        this.Sex = Sex;
+    }
+
+    public String getSignature() {
+        return this.Signature;
+    }
+
+    public void setSignature(String Signature) {
+        this.Signature = Signature;
+    }
+
+    public long getVerifyFlag() {
+        return this.VerifyFlag;
+    }
+
+    public void setVerifyFlag(long VerifyFlag) {
+        this.VerifyFlag = VerifyFlag;
+    }
+
+    public long getOwnerUin() {
+        return this.OwnerUin;
+    }
+
+    public void setOwnerUin(long OwnerUin) {
+        this.OwnerUin = OwnerUin;
+    }
+
     public String getPYInitial() {
-        return PYInitial;
+        return this.PYInitial;
     }
 
     public void setPYInitial(String PYInitial) {
@@ -258,7 +238,7 @@ public class WechatUserBean extends BaseBean {
     }
 
     public String getPYQuanPin() {
-        return PYQuanPin;
+        return this.PYQuanPin;
     }
 
     public void setPYQuanPin(String PYQuanPin) {
@@ -266,7 +246,7 @@ public class WechatUserBean extends BaseBean {
     }
 
     public String getRemarkPYInitial() {
-        return RemarkPYInitial;
+        return this.RemarkPYInitial;
     }
 
     public void setRemarkPYInitial(String RemarkPYInitial) {
@@ -274,164 +254,114 @@ public class WechatUserBean extends BaseBean {
     }
 
     public String getRemarkPYQuanPin() {
-        return RemarkPYQuanPin;
+        return this.RemarkPYQuanPin;
     }
 
     public void setRemarkPYQuanPin(String RemarkPYQuanPin) {
         this.RemarkPYQuanPin = RemarkPYQuanPin;
     }
 
-    public long getHideInputBarFlag() {
-        return HideInputBarFlag;
-    }
-
-    public void setHideInputBarFlag(int HideInputBarFlag) {
-        this.HideInputBarFlag = HideInputBarFlag;
-    }
-
     public long getStarFriend() {
-        return StarFriend;
-    }
-
-    public void setStarFriend(int StarFriend) {
-        this.StarFriend = StarFriend;
-    }
-
-    public long getSex() {
-        return Sex;
-    }
-
-    public void setSex(int Sex) {
-        this.Sex = Sex;
-    }
-
-    public String getSignature() {
-        return Signature;
-    }
-
-    public void setSignature(String Signature) {
-        this.Signature = Signature;
-    }
-
-    public long getAppAccountFlag() {
-        return AppAccountFlag;
-    }
-
-    public void setAppAccountFlag(int AppAccountFlag) {
-        this.AppAccountFlag = AppAccountFlag;
-    }
-
-    public long getVerifyFlag() {
-        return VerifyFlag;
-    }
-
-    public void setVerifyFlag(int VerifyFlag) {
-        this.VerifyFlag = VerifyFlag;
-    }
-
-    public long getContactFlag() {
-        return ContactFlag;
-    }
-
-    public void setContactFlag(int ContactFlag) {
-        this.ContactFlag = ContactFlag;
-    }
-
-    public long getWebWxPluginSwitch() {
-        return WebWxPluginSwitch;
-    }
-
-    public void setWebWxPluginSwitch(int WebWxPluginSwitch) {
-        this.WebWxPluginSwitch = WebWxPluginSwitch;
-    }
-
-    public long getHeadImgFlag() {
-        return HeadImgFlag;
-    }
-
-    public void setHeadImgFlag(int HeadImgFlag) {
-        this.HeadImgFlag = HeadImgFlag;
-    }
-
-    public long getSnsFlag() {
-        return SnsFlag;
-    }
-
-    public void setSnsFlag(int SnsFlag) {
-        this.SnsFlag = SnsFlag;
-    }
-
-    public void setWebWxPluginSwitch(long WebWxPluginSwitch) {
-        this.WebWxPluginSwitch = WebWxPluginSwitch;
-    }
-
-    public void setHeadImgFlag(long HeadImgFlag) {
-        this.HeadImgFlag = HeadImgFlag;
-    }
-
-    public void setUin(long Uin) {
-        this.Uin = Uin;
-    }
-
-    public void setContactFlag(long ContactFlag) {
-        this.ContactFlag = ContactFlag;
-    }
-
-    public void setMemberCount(long MemberCount) {
-        this.MemberCount = MemberCount;
-    }
-
-    public void setHideInputBarFlag(long HideInputBarFlag) {
-        this.HideInputBarFlag = HideInputBarFlag;
-    }
-
-    public void setSex(long Sex) {
-        this.Sex = Sex;
-    }
-
-    public void setVerifyFlag(long VerifyFlag) {
-        this.VerifyFlag = VerifyFlag;
-    }
-
-    public void setOwnerUin(long OwnerUin) {
-        this.OwnerUin = OwnerUin;
+        return this.StarFriend;
     }
 
     public void setStarFriend(long StarFriend) {
         this.StarFriend = StarFriend;
     }
 
+    public long getAppAccountFlag() {
+        return this.AppAccountFlag;
+    }
+
     public void setAppAccountFlag(long AppAccountFlag) {
         this.AppAccountFlag = AppAccountFlag;
+    }
+
+    public long getStatues() {
+        return this.Statues;
     }
 
     public void setStatues(long Statues) {
         this.Statues = Statues;
     }
 
+    public long getAttrStatus() {
+        return this.AttrStatus;
+    }
+
+    public void setAttrStatus(long AttrStatus) {
+        this.AttrStatus = AttrStatus;
+    }
+
+    public String getProvince() {
+        return this.Province;
+    }
+
+    public void setProvince(String Province) {
+        this.Province = Province;
+    }
+
+    public String getCity() {
+        return this.City;
+    }
+
+    public void setCity(String City) {
+        this.City = City;
+    }
+
+    public String getAlias() {
+        return this.Alias;
+    }
+
+    public void setAlias(String Alias) {
+        this.Alias = Alias;
+    }
+
+    public long getSnsFlag() {
+        return this.SnsFlag;
+    }
+
     public void setSnsFlag(long SnsFlag) {
         this.SnsFlag = SnsFlag;
+    }
+
+    public long getUniFriend() {
+        return this.UniFriend;
     }
 
     public void setUniFriend(long UniFriend) {
         this.UniFriend = UniFriend;
     }
 
+    public String getDisplayName() {
+        return this.DisplayName;
+    }
+
+    public void setDisplayName(String DisplayName) {
+        this.DisplayName = DisplayName;
+    }
+
+    public long getChatRoomId() {
+        return this.ChatRoomId;
+    }
+
     public void setChatRoomId(long ChatRoomId) {
         this.ChatRoomId = ChatRoomId;
     }
 
-    public String getUserId() {
-        if (TextUtils.isEmpty(userId)) {
-            StringBuilder builder = new StringBuilder();
-            builder.append(NickName).append(HeadImgFlag).append(ContactFlag).append(VerifyFlag).append(PYInitial).append(PYQuanPin).append(Alias);
-            userId = MD5.encode(builder.toString());
-        }
-        return this.userId;
+    public String getKeyWord() {
+        return this.KeyWord;
     }
 
-    public void setUserId(String userId) {
+    public void setKeyWord(String KeyWord) {
+        this.KeyWord = KeyWord;
+    }
 
-        this.userId = userId;
+    public String getEncryChatRoomId() {
+        return this.EncryChatRoomId;
+    }
+
+    public void setEncryChatRoomId(String EncryChatRoomId) {
+        this.EncryChatRoomId = EncryChatRoomId;
     }
 }

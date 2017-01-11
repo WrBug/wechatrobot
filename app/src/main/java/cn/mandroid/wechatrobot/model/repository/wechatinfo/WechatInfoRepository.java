@@ -1,5 +1,6 @@
 package cn.mandroid.wechatrobot.model.repository.wechatinfo;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +16,14 @@ public class WechatInfoRepository {
     private static volatile WechatInfoRepository INSTANCE;
     private IWechatInfoLocalSource mWechatInfoLocalSource;
     private IWechatInfoCloudSource mWechatInfoCloudSource;
+    private Map<String, WechatUserBean> contactors;
+    private Map<String, String> contactorHash;
 
     private WechatInfoRepository() {
         mWechatInfoCloudSource = new WechatInfoCloudSource();
         mWechatInfoLocalSource = new WechatInfoLocalSource();
+        contactors = new HashMap<>();
+        contactorHash = new HashMap<>();
     }
 
     public static WechatInfoRepository getInstance() {
@@ -35,10 +40,26 @@ public class WechatInfoRepository {
     }
 
     public void saveWechatContactors(List<WechatUserBean> userBeens) {
+        contactors.clear();
+        for (WechatUserBean userBeen : userBeens) {
+            contactors.put(userBeen.getHashCode(), userBeen);
+            contactorHash.put(userBeen.getUserName(), userBeen.getHashCode());
+        }
         mWechatInfoLocalSource.saveWechatContactors(userBeens);
     }
 
+    public WechatUserBean getUserByHash(String hashCode) {
+        return contactors.get(hashCode);
+    }
+
     public WechatUserBean getLocalWechatContactor(String username) {
+        if (contactorHash.containsKey(username)) {
+            String hash = contactorHash.get(username);
+            WechatUserBean userBean = contactors.get(hash);
+            if (userBean != null) {
+                return userBean;
+            }
+        }
         return mWechatInfoLocalSource.getLocalWechatContactor(username);
     }
 

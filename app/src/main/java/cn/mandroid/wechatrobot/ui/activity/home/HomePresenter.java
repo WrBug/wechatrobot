@@ -60,12 +60,13 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
     @Override
     public void saveMessages(WechatMessageBean messageBean) {
         List<WechatMessage> wechatMessages = messageBean.getAddMsgList();
-        List<WechatMessage> cache = new ArrayList<>(wechatMessages);
+        List<WechatMessage> cache = new ArrayList<>();
         for (int i = 0; i < messageBean.getAddMsgList().size(); i++) {
             wechatMessages.get(i).setUin(mWechatAuthenticationBean.getUin());
             wechatMessages.get(i).setIsFromMine(wechatMessages.get(i).getFromUserName().equals(mUser.getUserName()));
-            if (wechatMessages.get(i).getMsgType() == 51 || wechatMessages.get(i).isGroupMessage()) {
-                cache.remove(wechatMessages.get(i));
+            wechatMessages.get(i).setUserHash(mWechatInfoRepository.getLocalWechatContactor(wechatMessages.get(i).getFromUserName()).getHashCode());
+            if (wechatMessages.get(i).getMsgType() != 51 && !wechatMessages.get(i).isGroupMessage()) {
+                cache.add(wechatMessages.get(i));
             }
         }
         mWechatInfoRepository.saveWechatMessages(wechatMessages);

@@ -66,16 +66,13 @@ public class WechatMessage extends BaseBean {
     private long ImgWidth;
     private long SubMsgType;
     private long NewMsgId;
+    private String userHash;
 
-    @Generated(hash = 843128925)
-    public WechatMessage(String MsgId, long uin, boolean isFromMine,
-                         String FromUserName, String ToUserName, long MsgType, String Content,
-                         long Status, long ImgStatus, long CreateTime, long VoiceLength,
-                         long PlayLength, String FileName, String FileSize, String MediaId,
-                         String Url, long AppMsgType, long StatusNotifyCode,
-                         String StatusNotifyUserName, long ForwardFlag, long HasProductId,
-                         String Ticket, long ImgHeight, long ImgWidth, long SubMsgType,
-                         long NewMsgId) {
+    @Generated(hash = 333123601)
+    public WechatMessage(String MsgId, long uin, boolean isFromMine, String FromUserName, String ToUserName, long MsgType, String Content, long Status,
+            long ImgStatus, long CreateTime, long VoiceLength, long PlayLength, String FileName, String FileSize, String MediaId, String Url,
+            long AppMsgType, long StatusNotifyCode, String StatusNotifyUserName, long ForwardFlag, long HasProductId, String Ticket, long ImgHeight,
+            long ImgWidth, long SubMsgType, long NewMsgId, String userHash) {
         this.MsgId = MsgId;
         this.uin = uin;
         this.isFromMine = isFromMine;
@@ -102,6 +99,7 @@ public class WechatMessage extends BaseBean {
         this.ImgWidth = ImgWidth;
         this.SubMsgType = SubMsgType;
         this.NewMsgId = NewMsgId;
+        this.userHash = userHash;
     }
 
     @Generated(hash = 83776159)
@@ -378,5 +376,13 @@ public class WechatMessage extends BaseBean {
 
     public void setSubMsgType(long SubMsgType) {
         this.SubMsgType = SubMsgType;
+    }
+
+    public String getUserHash() {
+        return this.userHash;
+    }
+
+    public void setUserHash(String userHash) {
+        this.userHash = userHash;
     }
 }

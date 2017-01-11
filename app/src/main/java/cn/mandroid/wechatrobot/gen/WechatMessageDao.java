@@ -50,6 +50,7 @@ public class WechatMessageDao extends AbstractDao<WechatMessage, String> {
         public final static Property ImgWidth = new Property(23, long.class, "ImgWidth", false, "IMG_WIDTH");
         public final static Property SubMsgType = new Property(24, long.class, "SubMsgType", false, "SUB_MSG_TYPE");
         public final static Property NewMsgId = new Property(25, long.class, "NewMsgId", false, "NEW_MSG_ID");
+        public final static Property UserHash = new Property(26, String.class, "userHash", false, "USER_HASH");
     }
 
 
@@ -90,7 +91,8 @@ public class WechatMessageDao extends AbstractDao<WechatMessage, String> {
                 "\"IMG_HEIGHT\" INTEGER NOT NULL ," + // 22: ImgHeight
                 "\"IMG_WIDTH\" INTEGER NOT NULL ," + // 23: ImgWidth
                 "\"SUB_MSG_TYPE\" INTEGER NOT NULL ," + // 24: SubMsgType
-                "\"NEW_MSG_ID\" INTEGER NOT NULL );"); // 25: NewMsgId
+                "\"NEW_MSG_ID\" INTEGER NOT NULL ," + // 25: NewMsgId
+                "\"USER_HASH\" TEXT);"); // 26: userHash
         // Add Indexes
         db.execSQL("CREATE INDEX " + constraint + "IDX_WECHAT_MESSAGE_CREATE_TIME ON WECHAT_MESSAGE" +
                 " (\"CREATE_TIME\" ASC);");
@@ -171,6 +173,11 @@ public class WechatMessageDao extends AbstractDao<WechatMessage, String> {
         stmt.bindLong(24, entity.getImgWidth());
         stmt.bindLong(25, entity.getSubMsgType());
         stmt.bindLong(26, entity.getNewMsgId());
+ 
+        String userHash = entity.getUserHash();
+        if (userHash != null) {
+            stmt.bindString(27, userHash);
+        }
     }
 
     @Override
@@ -242,6 +249,11 @@ public class WechatMessageDao extends AbstractDao<WechatMessage, String> {
         stmt.bindLong(24, entity.getImgWidth());
         stmt.bindLong(25, entity.getSubMsgType());
         stmt.bindLong(26, entity.getNewMsgId());
+ 
+        String userHash = entity.getUserHash();
+        if (userHash != null) {
+            stmt.bindString(27, userHash);
+        }
     }
 
     @Override
@@ -277,7 +289,8 @@ public class WechatMessageDao extends AbstractDao<WechatMessage, String> {
             cursor.getLong(offset + 22), // ImgHeight
             cursor.getLong(offset + 23), // ImgWidth
             cursor.getLong(offset + 24), // SubMsgType
-            cursor.getLong(offset + 25) // NewMsgId
+            cursor.getLong(offset + 25), // NewMsgId
+            cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26) // userHash
         );
         return entity;
     }
@@ -310,6 +323,7 @@ public class WechatMessageDao extends AbstractDao<WechatMessage, String> {
         entity.setImgWidth(cursor.getLong(offset + 23));
         entity.setSubMsgType(cursor.getLong(offset + 24));
         entity.setNewMsgId(cursor.getLong(offset + 25));
+        entity.setUserHash(cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26));
      }
     
     @Override
