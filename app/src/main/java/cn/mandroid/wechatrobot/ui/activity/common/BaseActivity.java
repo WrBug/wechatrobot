@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import cn.mandroid.wechatrobot.R;
+import cn.mandroid.wechatrobot.anotation.LayoutId;
 import cn.mandroid.wechatrobot.model.common.Api;
 import cn.mandroid.wechatrobot.ui.activity.wechatlogin.WechatLoginActivity;
 import cn.mandroid.wechatrobot.utils.MLog;
@@ -36,7 +36,8 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
         mActivitylist.add(this);
         mContext = this;
         beforeInject();
-        setContentView(setContentView());
+        int layoutId = getLayoutId();
+        super.setContentView(layoutId);
         ButterKnife.bind(this);
         mPersenter = setPresenter();
         if (mPersenter == null) {
@@ -45,14 +46,25 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
         afterView();
     }
 
+    @Deprecated
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        throw new RuntimeException("use annotation LayoutId");
+    }
+
+    public int getLayoutId() {
+        LayoutId layoutId = getClass().getAnnotation(LayoutId.class);
+        if (layoutId != null) {
+            return layoutId.value();
+        }
+        return -1;
+    }
+
     @Override
     public void setSupportActionBar(@Nullable Toolbar toolbar) {
         super.setSupportActionBar(toolbar);
         mActionBar = getSupportActionBar();
     }
-
-    @LayoutRes
-    protected abstract int setContentView();
 
     protected abstract void afterView();
 

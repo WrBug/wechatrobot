@@ -11,6 +11,7 @@ import org.greenrobot.greendao.annotation.Transient;
 import java.util.List;
 
 import cn.mandroid.wechatrobot.model.entity.BaseBean;
+import cn.mandroid.wechatrobot.utils.MD5;
 
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Unique;
@@ -54,19 +55,18 @@ public class WechatUserBean extends BaseBean {
     private long ChatRoomId;
     private String KeyWord;
     private String EncryChatRoomId;
+    @Unique
+    private String userId;
     @Transient
     private List<WechatUserBean> MemberList;
 
-    @Generated(hash = 1340278071)
-    public WechatUserBean(String UserName, long WebWxPluginSwitch, long HeadImgFlag,
-                          long Uin, String NickName, String HeadImgUrl, long ContactFlag,
-                          long MemberCount, String RemarkName, long HideInputBarFlag, long Sex,
-                          String Signature, long VerifyFlag, long OwnerUin, String PYInitial,
-                          String PYQuanPin, String RemarkPYInitial, String RemarkPYQuanPin,
-                          long StarFriend, long AppAccountFlag, long Statues, long AttrStatus,
-                          String Province, String City, String Alias, long SnsFlag,
-                          long UniFriend, String DisplayName, long ChatRoomId, String KeyWord,
-                          String EncryChatRoomId) {
+    @Generated(hash = 712188201)
+    public WechatUserBean(String UserName, long WebWxPluginSwitch, long HeadImgFlag, long Uin, String NickName,
+                          String HeadImgUrl, long ContactFlag, long MemberCount, String RemarkName, long HideInputBarFlag,
+                          long Sex, String Signature, long VerifyFlag, long OwnerUin, String PYInitial, String PYQuanPin,
+                          String RemarkPYInitial, String RemarkPYQuanPin, long StarFriend, long AppAccountFlag, long Statues,
+                          long AttrStatus, String Province, String City, String Alias, long SnsFlag, long UniFriend,
+                          String DisplayName, long ChatRoomId, String KeyWord, String EncryChatRoomId, String userId) {
         this.UserName = UserName;
         this.WebWxPluginSwitch = WebWxPluginSwitch;
         this.HeadImgFlag = HeadImgFlag;
@@ -98,6 +98,7 @@ public class WechatUserBean extends BaseBean {
         this.ChatRoomId = ChatRoomId;
         this.KeyWord = KeyWord;
         this.EncryChatRoomId = EncryChatRoomId;
+        this.userId = userId;
     }
 
     @Generated(hash = 1706827256)
@@ -418,5 +419,19 @@ public class WechatUserBean extends BaseBean {
 
     public void setChatRoomId(long ChatRoomId) {
         this.ChatRoomId = ChatRoomId;
+    }
+
+    public String getUserId() {
+        if (TextUtils.isEmpty(userId)) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(NickName).append(HeadImgFlag).append(ContactFlag).append(VerifyFlag).append(PYInitial).append(PYQuanPin).append(Alias);
+            userId = MD5.encode(builder.toString());
+        }
+        return this.userId;
+    }
+
+    public void setUserId(String userId) {
+
+        this.userId = userId;
     }
 }

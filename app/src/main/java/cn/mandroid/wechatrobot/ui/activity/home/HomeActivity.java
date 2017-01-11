@@ -12,6 +12,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import cn.mandroid.wechatrobot.R;
+import cn.mandroid.wechatrobot.anotation.LayoutId;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatAuthenticationBean;
 import cn.mandroid.wechatrobot.model.entity.dao.WechatMessage;
 import cn.mandroid.wechatrobot.model.entity.wechat.wechatmessage.WechatMessageBean;
@@ -23,7 +24,7 @@ import cn.mandroid.wechatrobot.ui.widget.chatview.ChatView;
 import cn.mandroid.wechatrobot.ui.widget.faboptions.FabOptions;
 import cn.mandroid.wechatrobot.utils.ImageLoader;
 import me.drakeet.materialdialog.MaterialDialog;
-
+@LayoutId(R.layout.activity_home)
 public class HomeActivity extends BaseActivity<HomeContract.Presenter> implements HomeContract.View, NewMessageReceiver.OnNewMessageListener {
     @BindView(R.id.activity_home)
     CoordinatorLayout mCoordinatorLayout;
@@ -39,11 +40,6 @@ public class HomeActivity extends BaseActivity<HomeContract.Presenter> implement
     private NewMessageReceiver mNewMessageReceiver;
     private boolean isServiceStarted;
     private boolean isRobotStart;
-
-    @Override
-    protected int setContentView() {
-        return R.layout.activity_home;
-    }
 
     @Override
     protected void afterView() {

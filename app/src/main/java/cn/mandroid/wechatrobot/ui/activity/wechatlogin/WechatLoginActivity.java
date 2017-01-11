@@ -14,11 +14,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import cn.mandroid.wechatrobot.R;
+import cn.mandroid.wechatrobot.anotation.LayoutId;
 import cn.mandroid.wechatrobot.ui.activity.common.BaseActivity;
 import cn.mandroid.wechatrobot.ui.activity.home.HomeActivity;
 import cn.mandroid.wechatrobot.ui.widget.RoundCornerImageView;
 import cn.mandroid.wechatrobot.utils.ImageLoader;
 
+@LayoutId(R.layout.activity_wechat_login)
 public class WechatLoginActivity extends BaseActivity<WechatLoginContract.Presenter> implements WechatLoginContract.View {
 
     @BindView(R.id.toolBar)
@@ -29,10 +31,6 @@ public class WechatLoginActivity extends BaseActivity<WechatLoginContract.Presen
     TextView mPcOpenQrcodeNoticeTv;
     private WechatLoginViewPagerAdapter mWechatLoginViewPagerAdapter;
 
-    @Override
-    protected int setContentView() {
-        return R.layout.activity_wechat_login;
-    }
 
     @Override
     protected void afterView() {
